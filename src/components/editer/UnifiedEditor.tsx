@@ -141,8 +141,9 @@ export function UnifiedEditor({
           rows={5}
           maxLength={5000}
         />
-        <div className="text-right text-xs text-muted-foreground">
-          {content.length}/5000
+        <div className="flex gap-1 justify-end text-xs text-muted-foreground">
+          {content.length}/5000 
+          <div className="text-destructive">*</div>
         </div>
       </div>
 
@@ -254,7 +255,7 @@ export function UnifiedEditor({
         <div className="flex items-center justify-between">
           {/* Left: Formatting Tools */}
           <div className="flex items-center space-x-1 sm:space-x-3">
-            <Button type="button" variant="ghost" size="sm" onClick={() => formatText("bold")} className="p-1 h-8 w-8">
+            <Button type="button" variant="ghost" size="sm" onClick={() => formatText("bold")} className="p-1 h-8 w-8" disabled={true}>
               <Bold className="h-4 w-4" />
             </Button>
             <Button
@@ -262,6 +263,7 @@ export function UnifiedEditor({
               variant="ghost"
               size="sm"
               onClick={() => formatText("italic")}
+              disabled={true}
               className="p-1 h-8 w-8 hidden sm:flex"
             >
               <Italic className="h-4 w-4" />
@@ -271,6 +273,7 @@ export function UnifiedEditor({
               variant="ghost"
               size="sm"
               onClick={() => formatText("underline")}
+              disabled={true}
               className="p-1 h-8 w-8"
             >
               <Underline className="h-4 w-4" />
@@ -280,6 +283,7 @@ export function UnifiedEditor({
               variant="ghost"
               size="sm"
               onClick={() => formatText("strikethrough")}
+              disabled={true}
               className="p-1 h-8 w-8 "
             >
               <Strikethrough className="h-4 w-4" />
@@ -289,6 +293,7 @@ export function UnifiedEditor({
               variant="ghost"
               size="sm"
               onClick={() => formatText("link")}
+              disabled={true}
               className="p-1 h-8 w-8 hidden sm:flex"
             >
               <Link className="h-4 w-4" />
@@ -298,6 +303,7 @@ export function UnifiedEditor({
               variant="ghost"
               size="sm"
               onClick={() => formatText("mention")}
+              disabled={true}
               className="p-1 h-8 w-8 "
             >
               <AtSign className="h-4 w-4" />
@@ -307,6 +313,7 @@ export function UnifiedEditor({
               type="button"
               variant="ghost"
               size="sm"
+              disabled={true}
               className="p-1 h-8 w-8 "
             >
               <Globe className="h-4 w-4" />
@@ -315,6 +322,7 @@ export function UnifiedEditor({
               type="button"
               variant="ghost"
               size="sm"
+              disabled={true}
               className="p-1 h-8 w-8 "
             >
               <MessageSquare className="h-4 w-4" />
@@ -323,6 +331,7 @@ export function UnifiedEditor({
               type="button"
               variant="ghost"
               size="sm"
+              disabled={true}
               className="h-8 px-2 text-xs"
             >
               <Expand className="h-4 w-4" />
