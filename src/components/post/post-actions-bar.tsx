@@ -12,7 +12,7 @@ export const PostActionsBar = ({ post }: { post: Post }) => {
   const { viewMode } = useFeedContext();
   const { likeButton, commentButton, bookmarkButton, shareButton } = usePostActionsButtons({ post });
 
-  const rightButtons = [commentButton, likeButton];
+  const rightButtons = [likeButton];
   const leftButtons = [bookmarkButton, shareButton];
 
   if (viewMode === "masonry") {

@@ -272,11 +272,11 @@ export default function Header() {
               <Button
                 variant="default"
                 size="icon"
-                className="w-8 h-8 bg-orange-500 hover:bg-orange-600 text-white rounded-full"
+                className="w-9 h-9 bg-orange-500 hover:bg-orange-600 text-white rounded-full"
                 onClick={() => setUploadDialogOpened(true)}
                 title="发布内容"
               >
-                <Plus className="h-5 w-5" strokeWidth={2.5} />
+                <Plus className="h-6 w-6" strokeWidth={2.5} />
               </Button>
             </nav>
             

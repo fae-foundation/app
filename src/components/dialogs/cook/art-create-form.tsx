@@ -186,7 +186,7 @@ export function ArtCreateForm({ onClose, onComplete }: ArtCreateFormProps) {
     e.preventDefault()
 
     if (!title.trim()) {
-      toast.error("请输入标题")
+      toast.error("请输入标题 ！")
       return
     }
 
@@ -209,10 +209,10 @@ export function ArtCreateForm({ onClose, onComplete }: ArtCreateFormProps) {
       return;
     }
 
-    /*if (!content.trim()) {
-    toast.error("Please enter some content !")
+    if (!content.trim()) {
+    toast.error("请输入内容 ！")
     return
-    }*/
+    }
 
     if (isOriginal && !licenseType) {
       toast.error("Please select a license for your license Type !")

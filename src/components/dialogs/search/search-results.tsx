@@ -2,6 +2,7 @@
 import { Stack, Text, Group, Card, Badge, Skeleton, useMantineColorScheme, useMantineTheme, UnstyledButton } from "@mantine/core"
 import { Hash, User, FileText, Key } from "lucide-react"
 import { Post } from "@lens-protocol/client"
+import { useTagFilter } from "@/contexts/tag-filter-context"
 
 interface SearchResultsProps {
   searchValue: string
@@ -118,6 +119,7 @@ export function SearchResults({ searchValue, selectedType, isLoading = true, fee
 
   const { colorScheme } = useMantineColorScheme()
   const theme = useMantineTheme()
+  const { addCustomTag } = useTagFilter()
 
   const renderSkeleton = () => {
     switch (selectedType) {
@@ -153,7 +155,10 @@ export function SearchResults({ searchValue, selectedType, isLoading = true, fee
         {matchingTags.map((tag, index) => (
           <UnstyledButton
             key={index}
-            onClick={() => onTagClick?.(tag)}
+            onClick={() => {
+              addCustomTag(tag);
+              onTagClick?.(tag);
+            }}
             style={{
               padding: "8px 12px",
               borderRadius: "6px",
