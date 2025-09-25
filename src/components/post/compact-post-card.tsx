@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Post } from "@lens-protocol/client";
@@ -7,6 +7,7 @@ import { formatTimestamp, checkIfOriginal, extractAttachments, getLicenseType } 
 import { PostActionsBar } from "./post-actions-bar";
 import { TokenIdDisplay } from "@/components/token-id-display";
 import { useRouter } from "next/navigation";
+import { ImageDialog } from "@/components/dialogs/image-dialog";
 
 interface CompactPostCardProps {
   post: Post;
@@ -15,6 +16,8 @@ interface CompactPostCardProps {
 
 export function CompactPostCard({ post, disableNavigation = false }: CompactPostCardProps) {
   const router = useRouter();
+  const [imageDialogOpen, setImageDialogOpen] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   
   // Extract data from original Post structure
   const displayName = post.author.metadata?.name || post.author.username?.localName || "Unknown User";
@@ -33,6 +36,11 @@ export function CompactPostCard({ post, disableNavigation = false }: CompactPost
   
   // Get the primary image for display
   const primaryImage = attachments.length > 0 ? attachments[0].item : null;
+
+  const handleImageClick = (index: number) => {
+    setSelectedImageIndex(index);
+    setImageDialogOpen(true);
+  };
   
   return (
     <Card 
@@ -40,7 +48,11 @@ export function CompactPostCard({ post, disableNavigation = false }: CompactPost
       style={{
         cursor: !disableNavigation ? 'pointer' : 'default'
       }}
-      onClick={() => !disableNavigation && router.push(`/p/${post.id}`)}
+      onClick={(e) => {
+        if (!disableNavigation && !imageDialogOpen) {
+          router.push(`/p/${post.id}`)
+        }
+      }}
     >
       <CardContent className="p-0">
         {/* Main image/content area */}
@@ -49,8 +61,12 @@ export function CompactPostCard({ post, disableNavigation = false }: CompactPost
             <img
               src={primaryImage}
               alt="Post content"
-              className="w-full h-auto object-cover group-hover:scale-[1.02] transition-transform duration-300"
+              className="w-full h-auto object-cover group-hover:scale-[1.02] transition-transform duration-300 cursor-pointer"
               loading="lazy"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleImageClick(0);
+              }}
             />
           </div>
         ) : (
@@ -105,6 +121,15 @@ export function CompactPostCard({ post, disableNavigation = false }: CompactPost
           <TokenIdDisplay uri={post.contentUri} isOriginal={isOriginal} licenseType={licenseType} />
         </div>
       </CardContent>
+      
+      {/* Image Dialog */}
+      <ImageDialog
+        opened={imageDialogOpen}
+        onClose={() => setImageDialogOpen(false)}
+        images={attachments.map(attachment => attachment.item)}
+        initialSlide={selectedImageIndex}
+        postId={post.id}
+      />
     </Card>
   );
 }

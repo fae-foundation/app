@@ -17,6 +17,7 @@
     "@lens-protocol/react": "0.0.0-canary-20250624084811",
     "@lens-protocol/react-web": "latest",
     "@lens-protocol/wagmi": "latest",
+    "@mantine/carousel": "^8.3.2",
     "@mantine/core": "^8.2.4",
     "@mantine/hooks": "^8.2.5",
     "@radix-ui/react-accordion": "1.2.2",
