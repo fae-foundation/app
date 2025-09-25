@@ -26,6 +26,8 @@ import { useLocale } from "next-intl";
 import { useRouter as useIntlRouter } from "@/i18n/navigation";
 import { useReconnectWallet } from "@/hooks/auth/use-reconnect-wallet";
 import { UploadDialog } from "./dialogs/upload/upload-dialog";
+import { UserName } from "./user/user-name";
+import { UserUsername } from "./user/user-handle";
 import { 
   AppShell,
   Container, 
@@ -51,6 +53,7 @@ export default function Header() {
   const { setProfileSelectModalOpen } = useProfileSelectStore();
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isWalletMenuOpen, setIsWalletMenuOpen] = useState(false);
   const [uploadDialogOpened, setUploadDialogOpened] = useState(false);
   const [selectedAction, setSelectedAction] = useState<string | null>(null);
   const { theme, setTheme } = useTheme();
@@ -58,6 +61,7 @@ export default function Header() {
   const intlRouter = useIntlRouter();
   const reconnectWallet = useReconnectWallet();
   const [opened, { toggle, close }] = useDisclosure(false);
+  const [walletOpened, { toggle: toggleWallet, close: closeWallet }] = useDisclosure(false);
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const isDesktop = useMediaQuery('(min-width: 768px)');
 
@@ -356,80 +360,78 @@ export default function Header() {
             />
 
             {/* 导航按钮组 - 居中 */}
-            <Group gap="xs" style={{ justifyContent: 'center' }}>
+            <Group gap="lg" style={{ justifyContent: 'center', alignItems: 'center' }}>
               {/* 主页按钮 */}
               <MantineButton
-                variant={pathname === "/" ? "filled" : "subtle"}
+                variant={pathname === "/" ? "filled" : "outline"}
                 color={pathname === "/" ? "orange" : "gray"}
-                size="lg"
+                size="xs"
                 component={Link}
                 href="/"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-full"
+                className="rounded-full w-10 h-10 flex items-center justify-center"
               >
-                {/*navT("feed")*/}
-                {<Home className="h-5 w-5" />}
+                <Home className="h-6 w-6" />
               </MantineButton>
 
               {/* 发布按钮 */}
-                <MantineButton
-                  variant="subtle"
-                  color="orange"
-                  size="lg"
-                  onClick={() => {
-                    setUploadDialogOpened(true);
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="rounded-full"
-                >
-                  <Plus className="h-6 w-6" strokeWidth={3} />
-                </MantineButton>
+              <MantineButton
+                variant="outline"
+                color="gray"
+                size="xs"
+                onClick={() => {
+                  setUploadDialogOpened(true);
+                  setIsMobileMenuOpen(false);
+                }}
+                className="rounded-full w-10 h-10 flex items-center justify-center"
+              >
+                <Plus className="h-6 w-6" strokeWidth={2.5} />
+              </MantineButton>
 
               {/* 钱包按钮 */}
               {currentProfile ? (
                 <MantineButton
-                  variant="subtle"
+                  variant="outline"
                   color="gray"
-                  size="lg"
-                  //leftSection={<Wallet className="h-4 w-4" />}
-                  className="rounded-full"
-
-                  onClick={() => {
-                    reconnectWallet();
-                    setIsMobileMenuOpen(false);
-                  }}
+                  size="xs"
+                  className="rounded-full w-10 h-10 flex items-center justify-center p-0"
+                  onClick={toggleWallet}
                 >
-                  {/*t("wallet")*/}
-                  {<Wallet className="h-5 w-5" />}
+                  <Avatar className="h-10 w-10 border-2 border-gray-200">
+                    <AvatarImage
+                      src={currentProfile?.metadata?.picture || "/gull.jpg"}
+                    />
+                    <AvatarFallback className="bg-gray-100 text-gray-700">
+                      {currentProfile?.username?.localName
+                        ?.charAt(0)
+                        ?.toUpperCase() || "U"}
+                    </AvatarFallback>
+                  </Avatar>
                 </MantineButton>
               ) : isConnected ? (
                 <MantineButton
-                  variant="subtle"
+                  variant="outline"
                   color="gray"
-                  size="lg"
-                  //leftSection={<User className="h-4 w-4" />}
-                  className="rounded-full"
+                  size="xs"
+                  className="rounded-full w-10 h-10 flex items-center justify-center"
                   onClick={() => {
                     setProfileSelectModalOpen(true);
                     setIsMobileMenuOpen(false);
                   }}
                 >
-                  {/*t("selectProfile")*/}
-                  {<User className="h-5 w-5" />}
+                  <User className="h-6 w-6" />
                 </MantineButton>
               ) : (
                 <ConnectKitButton.Custom>
                   {({ show }) => (
                     <MantineButton
-                      variant="subtle"
+                      variant="outline"
                       color="gray"
-                      size="lg"
-                      //leftSection={<Wallet className="h-4 w-4" />}
-                      className="rounded-full"
+                      size="xs"
+                      className="rounded-full w-10 h-10 flex items-center justify-center"
                       onClick={show}
                     >
-                      {/*t("connect")*/}
-                      {<Wallet className="h-5 w-5" />}
+                      <Wallet className="h-6 w-6" />
                     </MantineButton>
                   )}
                 </ConnectKitButton.Custom>
@@ -533,6 +535,118 @@ export default function Header() {
               >
                 {navT("home")}
               </MantineButton>
+            </Stack>
+          </Drawer>
+        )}
+
+        {/* 钱包抽屉菜单 */}
+        {!isDesktop && currentProfile && (
+          <Drawer 
+            opened={walletOpened} 
+            onClose={closeWallet} 
+            size="47%" 
+            padding="md"
+            position="bottom"
+            withCloseButton={false}
+            styles={{
+              content: {
+                borderTopLeftRadius: '8px',
+                borderTopRightRadius: '8px',
+              }
+            }}
+          >
+            <Stack gap="md">
+              <Text size="md" fw={600} ta="center">Menu</Text>
+
+              {/* 用户信息 */}
+              <Group justify="center" mt="md" pt="md" style={{ borderTop: '1px solid #e9ecef' }}>
+                <Link 
+                  href="/profile" 
+                  onClick={() => closeWallet()}
+                  className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg p-0 transition-colors"
+                >
+                  <Avatar className="h-16 w-16 border-2 border-gray-200">
+                    <AvatarImage
+                      src={currentProfile?.metadata?.picture || "/gull.jpg"}
+                    />
+                    <AvatarFallback className="bg-gray-100 text-gray-700">
+                      {currentProfile?.username?.localName
+                        ?.charAt(0)
+                        ?.toUpperCase() || "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col space-y-1">
+                    <UserName 
+                      account={currentProfile} 
+                      className="text-lg font-semibold"
+                    />
+                    <UserUsername 
+                      account={currentProfile} 
+                      className="text-sm text-gray-500"
+                    />
+                    <Text size="sm" c="dimmed" className="max-w-[200px] truncate">
+                      {currentProfile?.metadata?.bio || t("fanworkLover")}
+                    </Text>
+                  </div>
+                </Link>
+              </Group>
+
+              {/* 菜单选项 */}
+              <Stack gap="xs" mt="md">
+                <MantineButton
+                  variant="subtle"
+                  color="gray"
+                  size="sm"
+                  leftSection={<User className="h-4 w-4" />}
+                  component={Link}
+                  href="/profile"
+                  onClick={() => closeWallet()}
+                >
+                  {navT("profile")}
+                </MantineButton>
+                
+                <MantineButton
+                  variant="subtle"
+                  color="gray"
+                  size="sm"
+                  leftSection={<Wallet className="h-4 w-4" />}
+                  onClick={() => {
+                    reconnectWallet();
+                    closeWallet();
+                  }}
+                >
+                  Address
+                </MantineButton>
+
+                <MantineButton
+                  variant="subtle"
+                  color="gray"
+                  size="sm"
+                  leftSection={<Settings className="h-4 w-4" />}
+                  component={Link}
+                  href="/settings"
+                  style={{
+                    cursor: 'not-allowed',
+                    opacity: 0.5,
+                  }}
+                  onClick={() => closeWallet()}
+                >
+                  {t("settings")} ({t("developing")})
+                </MantineButton>
+
+                <MantineButton
+                  variant="subtle"
+                  color="red"
+                  size="sm"
+                  leftSection={<LogOut className="h-4 w-4" />}
+                  onClick={() => {
+                    handleDisconnect();
+                    closeWallet();
+                  }}
+                >
+                  {t("disconnect")}
+                </MantineButton>
+              </Stack>
             </Stack>
           </Drawer>
         )}
