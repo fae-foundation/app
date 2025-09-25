@@ -198,7 +198,6 @@ export function UnifiedEditor({
                   tags={selectedTags} 
                   onRemove={removeTagFromSelection}
                   showRemoveButton={true}
-                  className="border text-zinc-700 bg-zinc-50 border-black text-sm font-medium"
                 />
               </div>
             )}

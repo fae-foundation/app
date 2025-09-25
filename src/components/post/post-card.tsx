@@ -7,6 +7,7 @@ import { resolveUrl } from "@/utils/resolve-url";
 import { formatTimestamp, checkIfOriginal, extractAttachments, getLicenseType } from "@/utils/post-helpers";
 import { useRouter } from "next/navigation";
 import { TagDisplay } from "@/components/ui/tag-display";
+import { useTagFilter } from "@/contexts/tag-filter-context";
 
 interface PostCardProps {
   post: Post;
@@ -15,6 +16,7 @@ interface PostCardProps {
 
 export function PostCard({ post, disableNavigation = false }: PostCardProps) {
   const router = useRouter();
+  const { addCustomTag } = useTagFilter();
 
   // Extract data from original Post structure
   const displayName = post.author.metadata?.name || post.author.username?.localName || "Unknown User";
@@ -124,7 +126,10 @@ export function PostCard({ post, disableNavigation = false }: PostCardProps) {
       
       {/* Tags Section */}
       <Box mb="md">
-        <TagDisplay tags={tags} />
+        <TagDisplay 
+          tags={tags} 
+          onTagClick={addCustomTag}
+        />
       </Box>
       
       {/* Media attachments */}

@@ -26,7 +26,7 @@ export type ActionButtonProps = {
   strokeColor: string;
   fillColor: string;
   isActive?: boolean;
-  onClick?: () => Promise<any> | undefined | undefined;
+  onClick?: () => Promise<any> | void;
   renderPopover?: (trigger: ReactElement) => ReactElement;
   isDisabled?: boolean;
   isUserLoggedIn?: boolean;
