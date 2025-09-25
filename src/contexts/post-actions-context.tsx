@@ -88,20 +88,20 @@ export const PostActionsProvider = ({ children }: { children: ReactNode }) => {
   const initPostState = useCallback(
     (post: Post, operations?: LoggedInPostOperations) => {
       setPostStates((prevStates) => {
-        if (!prevStates.has(post.id)) {
-          const newStates = new Map(prevStates);
-          newStates.set(post.id, {
-            post: post,
-            stats: { ...post.stats },
-            operations: operations ? convertToBooleanOperations(operations) : (post.operations ? convertToBooleanOperations(post.operations) : { ...defaultOperations }),
-            isCommentSheetOpen: false,
-            isCollectSheetOpen: false,
-            initialCommentUrlSynced: false,
-            initialCollectUrlSynced: false,
-          });
-          return newStates;
-        }
-        return prevStates;
+        const newStates = new Map(prevStates);
+        const currentState = prevStates.get(post.id);
+        
+        // Always update the post state, but preserve existing UI state if it exists
+        newStates.set(post.id, {
+          post: post,
+          stats: { ...post.stats },
+          operations: operations ? convertToBooleanOperations(operations) : (post.operations ? convertToBooleanOperations(post.operations) : { ...defaultOperations }),
+          isCommentSheetOpen: currentState?.isCommentSheetOpen ?? false,
+          isCollectSheetOpen: currentState?.isCollectSheetOpen ?? false,
+          initialCommentUrlSynced: currentState?.initialCommentUrlSynced ?? false,
+          initialCollectUrlSynced: currentState?.initialCollectUrlSynced ?? false,
+        });
+        return newStates;
       });
     },
     [defaultOperations, convertToBooleanOperations],

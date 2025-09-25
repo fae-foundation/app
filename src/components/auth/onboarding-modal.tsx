@@ -274,7 +274,7 @@ export function OnboardingModal({ open, onOpenChange, onSuccess }: OnboardingMod
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="w-[400px] flex flex-col">
+      <DialogContent className="w-[400px] flex flex-col" style={{ zIndex: 1200 }}>
         <DialogHeader>
           <DialogTitle className="text-base h-8 flex gap-2 items-center">
             <Button

@@ -40,7 +40,7 @@ export const CommentReactions = ({
           hasUpvoted 
             ? "text-red-500 dark:text-red-400" 
             : "hover:text-red-500 dark:hover:text-red-400"
-        } ${!isLoggedIn ? "opacity-50 cursor-not-allowed" : ""}`}
+        } `}
       >
         <Heart className={`w-4 h-4 ${hasUpvoted ? "fill-current" : ""}`} />
         {stats?.upvotes || 0}

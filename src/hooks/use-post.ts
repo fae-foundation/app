@@ -3,6 +3,7 @@ import { Post, PageSize, PostReferenceType } from "@lens-protocol/client";
 import { fetchPost, fetchPostReferences } from "@lens-protocol/client/actions";
 import { useSharedPostActions } from "@/contexts/post-actions-context";
 import { useLensAuthStore } from "@/stores/auth-store";
+import { useAuthCheck } from "@/hooks/auth/use-auth-check";
 
 interface UsePostOptions {
   postId: string;
@@ -79,7 +80,7 @@ export function usePost(options: UsePostOptions): UsePostReturn {
   const currentCommentCount = useRef<number>(0);
   const expectingNewComment = useRef<boolean>(false);
   
-  const isLoggedIn = !!currentProfile && !authStoreLoading;
+  const { isAuthenticated } = useAuthCheck();
   const isAuthReady = !authStoreLoading;
   
   // Get post state from shared context
@@ -247,6 +248,6 @@ export function usePost(options: UsePostOptions): UsePostReturn {
     isCollectSheetOpen: postState?.isCollectSheetOpen ?? false,
     
     // Auth state
-    isLoggedIn,
+    isLoggedIn: isAuthenticated,
   };
 }

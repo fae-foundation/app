@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useLensAuthStore } from "@/stores/auth-store";
 import { storageClient } from "@/lib/storage-client";
+import { useAuthCheck } from "@/hooks/auth/use-auth-check";
 
 interface CommentReplyAreaProps {
   postId: string;
@@ -31,12 +32,12 @@ export const CommentReplyArea = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { sessionClient } = useLensAuthStore();
   const { data: walletClient } = useWalletClient();
+  const { checkAuthentication } = useAuthCheck();
 
   const handleSubmit = async () => {
     if (!content.trim() || isSubmitting) return;
 
-    if (!sessionClient?.isSessionClient()) {
-      toast.error("Please connect your wallet");
+    if (!checkAuthentication("comment")) {
       return;
     }
 
@@ -53,14 +54,14 @@ export const CommentReplyArea = ({
       const { uri } = await storageClient.uploadAsJson(metadata);
 
       // Create comment using Lens Protocol
-      const result = await createPost(sessionClient, {
+      const result = await createPost(sessionClient!, {
         contentUri: uri,
         commentOn: {
           post: postId,
         },
       })
         .andThen(handleOperationWith(walletClient))
-        .andThen(sessionClient.waitForTransaction);
+        .andThen(sessionClient!.waitForTransaction);
 
       if (result.isErr()) {
         toast.dismiss(pendingToast);

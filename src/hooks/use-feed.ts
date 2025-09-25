@@ -7,6 +7,7 @@ import { useFeedContext } from "@/contexts/feed-context";
 import { useTagFilter } from "@/contexts/tag-filter-context";
 import { evmAddress } from "@lens-protocol/client";
 import { env } from "@/lib/env";
+import { useAuthCheck } from "@/hooks/auth/use-auth-check";
 
 // Helper function to filter out comments and replies
 export function isValidArticlePost(post: AnyPost): boolean {
@@ -63,7 +64,7 @@ export function useFeed(options: useFeedOptions = {}) {
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const lastPostIdRef = useRef<string | null>(null);
   
-  const isLoggedIn = !!currentProfile && !authStoreLoading;
+  const { isAuthenticated } = useAuthCheck();
   const isAuthReady = !authStoreLoading;
   
   // Helper functions
@@ -340,6 +341,6 @@ export function useFeed(options: useFeedOptions = {}) {
     handleLoadNewPosts,
     
     // State
-    isLoggedIn,
+    isLoggedIn: isAuthenticated,
   };
 }

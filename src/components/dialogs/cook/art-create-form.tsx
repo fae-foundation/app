@@ -473,7 +473,7 @@ export function ArtCreateForm({ onClose, onComplete }: ArtCreateFormProps) {
                     </div>
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-4xl max-h-[85vh] bg-white" style={{ zIndex: 1100 }}>
+                <DialogContent className="max-w-4xl max-h-[85vh] bg-white" style={{ zIndex: 1000 }}>
                   <DialogHeader className="border-b border-gray-100 pb-4">
                     <div className="flex items-center justify-center gap-2">
                       <Scale className="h-4 w-4 text-zinc-900" />
@@ -792,7 +792,7 @@ export function ArtCreateForm({ onClose, onComplete }: ArtCreateFormProps) {
                 </Button>
               </DialogTrigger>
 
-              <DialogContent className="max-w-4xl max-h-[85vh] bg-white" style={{ zIndex: 1100 }}>
+              <DialogContent className="max-w-4xl max-h-[85vh] bg-white" style={{ zIndex: 1000 }}>
                 <DialogHeader className="border-b border-gray-100 pb-4">
                   <div className="flex items-center justify-center gap-2">
                     <Settings className="h-4 w-4 text-zinc-900" />

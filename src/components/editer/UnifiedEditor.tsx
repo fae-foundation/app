@@ -173,7 +173,7 @@ export function UnifiedEditor({
 
       {/* Tag Addition Modal */}
       <Dialog open={showTagModal} onOpenChange={setShowTagModal}>
-        <DialogContent className="sm:max-w-md z-[1200]" style={{ zIndex: 1200 }}>
+        <DialogContent className="sm:max-w-md z-[1000]" style={{ zIndex: 1000 }}>
           <DialogHeader>
             <DialogTitle className="text-lg font-semibold">添加标签</DialogTitle>
           </DialogHeader>

@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
 import { useSharedPostActions } from "@/contexts/post-actions-context";
 import { LoggedInPostOperations } from "@lens-protocol/client";
+import { useAuthCheck } from "@/hooks/auth/use-auth-check";
 
 // Helper function to convert LoggedInPostOperations to BooleanPostOperations
 const convertToBooleanOperations = (operations: LoggedInPostOperations) => {
@@ -33,7 +34,7 @@ export const usePostActions = (post: Post | null) => {
     useSharedPostActions();
 
   const { sessionClient, currentProfile, loading } = useLensAuthStore();
-  const isLoggedIn = !!currentProfile && !loading;
+  const { isAuthenticated } = useAuthCheck();
 
   useEffect(() => {
     if (post) {
@@ -182,7 +183,7 @@ export const usePostActions = (post: Post | null) => {
 
   const handleBookmark = useCallback(async () => {
     // Return early if user is not logged in or post is null
-    if (!isLoggedIn || !post) return null;
+    if (!isAuthenticated || !post) return null;
 
     if (!sessionClient?.isSessionClient()) {
       toast.error("Please connect your wallet to bookmark posts");
@@ -206,10 +207,10 @@ export const usePostActions = (post: Post | null) => {
       updatePostOperations(post.id, { hasBookmarked: currentlyBookmarked });
       updatePostStats(post.id, { bookmarks: currentCount });
     }
-  }, [post?.id, operations, stats.bookmarks, updatePostOperations, updatePostStats, isLoggedIn, sessionClient]);
+  }, [post?.id, operations, stats.bookmarks, updatePostOperations, updatePostStats, isAuthenticated, sessionClient]);
 
   const handleLike = useCallback(async () => {
-    if (!isLoggedIn || !post) return null;
+    if (!isAuthenticated || !post) return null;
 
     if (!sessionClient?.isSessionClient()) {
       toast.error("Please connect your wallet to like posts");
@@ -233,7 +234,7 @@ export const usePostActions = (post: Post | null) => {
       updatePostOperations(post.id, { hasUpvoted: currentlyLiked });
       updatePostStats(post.id, { upvotes: currentCount });
     }
-  }, [post?.id, operations, stats.upvotes, updatePostOperations, updatePostStats, isLoggedIn, sessionClient]);
+  }, [post?.id, operations, stats.upvotes, updatePostOperations, updatePostStats, isAuthenticated, sessionClient]);
 
   return {
     handleComment,
@@ -246,6 +247,6 @@ export const usePostActions = (post: Post | null) => {
     handleCollectSheetOpenChange,
     stats,
     operations,
-    isLoggedIn,
+    isLoggedIn: isAuthenticated,
   };
 };
