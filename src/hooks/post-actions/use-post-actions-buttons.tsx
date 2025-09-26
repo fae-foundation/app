@@ -2,9 +2,11 @@
 
 import { Post } from "@lens-protocol/client";
 import { Heart, MessageCircle, Bookmark, Share2 } from "lucide-react";
-import React, { JSXElementConstructor, ReactElement } from "react";
+import { JSXElementConstructor, ReactElement } from "react";
 import { usePostActions } from "@/hooks/post-actions/use-post-actions";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 // 自定义图标组件，用于显示emoji
 const EmojiIcon = ({ emoji, size = 18, ...props }: { emoji: string; size?: number; [key: string]: any }) => (
@@ -14,7 +16,7 @@ const EmojiIcon = ({ emoji, size = 18, ...props }: { emoji: string; size?: numbe
 );
 
 type ActionButtonConfig = {
-  icon:any;
+  icon: any;
   label: string;
   initialCount: number;
   strokeColor: string;
@@ -50,6 +52,7 @@ export const usePostActionsButtons = ({
   post: Post;
 }): PostActionButtons => {
   const router = useRouter();
+  const t = useTranslations("post");
   const {
     //handleComment,
     handleBookmark,
@@ -90,6 +93,40 @@ export const usePostActionsButtons = ({
       }
     }, 500);
     */
+  };
+
+  // Helper function to share post using Web Share API
+  const handleShare = async () => {
+    // Extract title from post metadata
+    const title = "title" in post.metadata && typeof post.metadata.title === "string" && post.metadata.title.trim() !== ""
+      ? post.metadata.title
+      : "content" in post.metadata && typeof post.metadata.content === "string" && post.metadata.content.trim() !== ""
+        ? post.metadata.content.substring(0, 50) + "..."
+        : "Check out this post";
+
+    // Extract text/description from post metadata
+    const text = "content" in post.metadata && typeof post.metadata.content === "string" && post.metadata.content.trim() !== ""
+      ? post.metadata.content.length > 100
+        ? post.metadata.content.substring(0, 100) + "..."
+        : post.metadata.content
+      : title;
+
+    // Generate post URL
+    const postUrl = `${window.location.origin}/p/${post.id}`;
+
+    try {
+      await navigator.share({
+        title: title,
+        text: text,
+        url: postUrl,
+      });
+    } catch (error) {
+      // Handle user cancellation or other errors
+      if (error instanceof Error && error.name !== 'AbortError') {
+        console.error('Share failed:', error);
+        toast.error(t("shareError"));
+      }
+    }
   };
 
   const likes = stats.upvotes;
@@ -143,18 +180,9 @@ export const usePostActionsButtons = ({
       strokeColor: "#6b7280", 
       fillColor: "none",
       shouldIncrementOnClick: false,
+      onClick: handleShare,
       hideCount: true,
       isUserLoggedIn: isLoggedIn,
-      dropdownItems: [
-        {
-          icon: Share2,
-          label: "Copy Link",
-          onClick: () => {
-            // TODO: Implement copy link functionality
-            console.log("Copy link clicked");
-          },
-        },
-      ],
     },
   };
 

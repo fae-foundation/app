@@ -49,7 +49,8 @@
     "unlike": "Unlike",
     "bookmark": "Bookmark",
     "share": "Share",
-    "comment": "Comment"
+    "comment": "Comment",
+    "shareError": "Share failed, please try again"
   },
   "home": {
     "title": "Arctica",

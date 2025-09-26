@@ -49,7 +49,8 @@
     "unlike": "取消点赞",
     "bookmark": "收藏",
     "share": "分享",
-    "comment": "评论"
+    "comment": "评论",
+    "shareError": "分享失败，请重试"
   },
   "home": {
     "title": "Arctica",
