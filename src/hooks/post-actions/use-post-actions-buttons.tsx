@@ -72,7 +72,7 @@ export const usePostActionsButtons = ({
     if (tags.includes("cook")) {
       return "🍪";
     } else if (tags.includes("moment")) {
-      return "🩵";
+      return "🔆";
     }
     return null; // 默认不显示图标
   };
@@ -157,7 +157,6 @@ export const usePostActionsButtons = ({
       fillColor: "none",
       onClick: handleComment,
       shouldIncrementOnClick: false,
-      isDisabled: false,
       isUserLoggedIn: isLoggedIn,
     },
     bookmarkButton: {
@@ -169,7 +168,6 @@ export const usePostActionsButtons = ({
       fillColor: "none",
       shouldIncrementOnClick: true,
       onClick: handleBookmark,
-      isDisabled: false,
       isUserLoggedIn: isLoggedIn,
     },
     shareButton: {
@@ -182,7 +180,7 @@ export const usePostActionsButtons = ({
       shouldIncrementOnClick: false,
       onClick: handleShare,
       hideCount: true,
-      isUserLoggedIn: isLoggedIn,
+      isUserLoggedIn: true,
     },
   };
 

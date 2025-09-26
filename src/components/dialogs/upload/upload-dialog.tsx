@@ -30,8 +30,8 @@ export function UploadDialog({ opened, onClose, onButtonClick, selectedAction }:
     {
       label: "Moment",
       description: "Capture Memories",
-      icon: "🩵",
-      color: "#87CEEB", // Blue
+      icon: "🔆",
+      color: "#f97316", // Orange
       disabled: false,
     },
     {

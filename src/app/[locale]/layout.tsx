@@ -32,6 +32,9 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} suppressHydrationWarning>
+      <head>
+        <script async src="https://tally.so/widgets/embed.js"></script>
+      </head>
       <body className={inter.className}>
         <NextIntlClientProvider locale={locale}>
           <ClientLayout>{children}</ClientLayout>

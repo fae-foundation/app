@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User, Settings, LogOut, Menu, X, Sun, Moon, Monitor, Languages, Wallet, Info, Home, Compass, ScrollText, Plus } from "lucide-react";
+import { User, Settings, LogOut, Menu, X, Sun, Moon, Monitor, Languages, Wallet, Info, Home, Compass, ScrollText, Plus, MessageSquare } from "lucide-react";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { usePathname, useRouter } from "next/navigation";
 import { useLensAuthStore } from "@/stores/auth-store";
@@ -340,6 +340,37 @@ export default function Header() {
                 </DropdownMenuContent>
               </DropdownMenu>
 
+              {/* Feedback Button */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-10 w-10"
+                onClick={() => {
+                  if (window.Tally) {
+                    window.Tally.openPopup('mKba9z', {
+                      layout: 'modal',
+                      width: 700,
+                      emoji: {
+                        text: '👋',
+                        animation: 'wave'
+                      },
+                      onOpen: () => {
+                        console.log('反馈表单已打开');
+                      },
+                      onSubmit: (payload) => {
+                        console.log('反馈已提交:', payload);
+                      }
+                    });
+                  } else {
+                    // 备用方案：如果 Tally 未加载，使用外部链接
+                    window.open('https://tally.so/r/mKba9z', '_blank');
+                  }
+                }}
+                title="反馈"
+              >
+                <MessageSquare className="h-4 w-4" />
+              </Button>
+
             </div>
           </Container>
         </AppShell.Header>
@@ -534,6 +565,39 @@ export default function Header() {
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {navT("home")}
+              </MantineButton>
+
+              {/* 反馈按钮 */}
+              <MantineButton
+                variant="subtle"
+                color="gray"
+                size="sm"
+                leftSection={<MessageSquare className="h-4 w-4" />}
+                onClick={() => {
+                  if (window.Tally) {
+                    window.Tally.openPopup('mKba9z', {
+                      layout: 'modal',
+                      width: 700,
+                      emoji: {
+                        text: '👋',
+                        animation: 'wave'
+                      },
+                      onOpen: () => {
+                        console.log('反馈表单已打开');
+                        setIsMobileMenuOpen(false);
+                      },
+                      onSubmit: (payload) => {
+                        console.log('反馈已提交:', payload);
+                      }
+                    });
+                  } else {
+                    // 备用方案：如果 Tally 未加载，使用外部链接
+                    window.open('https://tally.so/r/mKba9z', '_blank');
+                    setIsMobileMenuOpen(false);
+                  }
+                }}
+              >
+                反馈
               </MantineButton>
             </Stack>
           </Drawer>
