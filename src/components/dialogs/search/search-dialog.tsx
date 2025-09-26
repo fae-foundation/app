@@ -39,10 +39,10 @@ interface SearchHistoryItem {
 }
 
 const searchTypeConfig = {
-  tag: { icon: Hash, label: "Tag" },
-  content: { icon: FileText, label: "Content" },
-  people: { icon: User, label: "User" },
-  token: { icon: Key, label: "Token ID" },
+  tag: { icon: Hash, label: "Tag", showSoon: false },
+  content: { icon: FileText, label: "Content", showSoon: false },
+  people: { icon: User, label: "User", showSoon: true },
+  token: { icon: Key, label: "Token ID", showSoon: true },
 }
 
 interface SearchDialogProps {
@@ -150,7 +150,7 @@ export function SearchDialog({ opened, onClose }: SearchDialogProps) {
             backgroundColor: colorScheme === "dark" ? theme.colors.dark[6] : theme.white,
           }}
         >
-          <Menu shadow="md" width={120}>
+          <Menu shadow="md" width={140}>
             <Menu.Target>
               <ActionIcon
                 variant="subtle"
@@ -176,6 +176,25 @@ export function SearchDialog({ opened, onClose }: SearchDialogProps) {
                     key={key}
                     leftSection={<IconComponent size={16} />}
                     onClick={() => setSelectedType(key as keyof typeof searchTypeConfig)}
+                    rightSection={
+                      config.showSoon ? (
+                        <Badge
+                          size="xs"
+                          variant="light"
+                          color="gray"
+                          style={{
+                            fontSize: "8px",
+                            padding: "1px 4px",
+                            borderRadius: "6px",
+                            fontWeight: 500,
+                            lineHeight: 1,
+                            //textTransform: "lowercase",
+                          }}
+                        >
+                          soon
+                        </Badge>
+                      ) : null
+                    }
                   >
                     {config.label}
                   </Menu.Item>

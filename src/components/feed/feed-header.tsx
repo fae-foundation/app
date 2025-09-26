@@ -26,9 +26,9 @@ export function FeedHeader() {
     hasActiveFilters 
   } = useTagFilter()
   const mainTabs = [
-    { value: "follow", label: feedHeaderT("follow"), disabled: true },
-    { value: "latest", label: feedHeaderT("latest"), disabled: false },
-    { value: "explore", label: feedHeaderT("explore"),disabled: true },
+    { value: "follow", label: feedHeaderT("follow"), disabled: true, showSoon: true },
+    { value: "latest", label: feedHeaderT("latest"), disabled: false, showSoon: false },
+    { value: "explore", label: feedHeaderT("explore"),disabled: true, showSoon: true },
   ]
 
   //const router = useRouter()
@@ -49,16 +49,18 @@ export function FeedHeader() {
           overflow: "hidden",
         }}
       >
-        <Group justify="space-between" h="auto" align="center" wrap="nowrap">
+        <Group justify="space-between" h="auto" align="flex-start" wrap="nowrap">
           {/* Left: Search Icon */}
-          <ActionIcon 
-            variant="transparent" 
-            size="lg"
-            className="text-gray-600 hover:text-orange-600 cursor-pointer dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex-shrink-0"
-            onClick={() => setSearchOpened(true)}
-          >
-            <Search size={20} />
-          </ActionIcon>
+          <div style={{ height: "32px", display: "flex", alignItems: "center" }}>
+            <ActionIcon 
+              variant="transparent" 
+              size="lg"
+              className="text-gray-600 hover:text-orange-600 cursor-pointer dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex-shrink-0"
+              onClick={() => setSearchOpened(true)}
+            >
+              <Search size={20} />
+            </ActionIcon>
+          </div>
 
           {/* Center: Main Navigation Tabs */}
           <Tabs value={activeTab} onChange={(value) => setActiveTab(value || "latest")} variant="unstyled">
@@ -74,13 +76,14 @@ export function FeedHeader() {
                         fontSize: "16px",
                         fontWeight: 500,
                         padding: "5px 5px",
-                        borderBottom: activeTab === tab.value ? "2px solid #ff6b35 " : "none",
+                        borderBottom: "none",
                         backgroundColor: "transparent",
                         cursor: "pointer",
                         margin: "0 7px",
                         whiteSpace: "nowrap",
                         minWidth: "auto",
                         flexShrink: 1,
+                        paddingTop: "7px",
                       }
                     }
                   )}
@@ -90,25 +93,63 @@ export function FeedHeader() {
                       : 'text-gray-800 dark:text-gray-200'} transition-colors`
                   }
                 >
-                  {tab.label}
+                  <Stack gap={2} align="center" style={{ minHeight: "32px" }}>
+                    <div style={{ height: "20px", display: "flex", alignItems: "center", position: "relative" }}>
+                      {tab.label}
+                      {activeTab === tab.value && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            bottom: "-2px",
+                            left: "50%",
+                            transform: "translateX(-50%)",
+                            width: "100%",
+                            height: "2px",
+                            backgroundColor: "#ff6b35",
+                            borderRadius: "1px",
+                          }}
+                        />
+                      )}
+                    </div>
+                    {tab.showSoon ? (
+                      <Badge
+                        size="xs"
+                        variant="light"
+                        color="gray"
+                        style={{
+                          fontSize: "8px",
+                          padding: "1px 4px",
+                          borderRadius: "6px",
+                          fontWeight: 500,
+                          lineHeight: 1,
+                        }}
+                      >
+                        soon
+                      </Badge>
+                    ) : (
+                      <div style={{ height: "16px" }}></div>
+                    )}
+                  </Stack>
                 </Tabs.Tab>
               ))}
             </Tabs.List>
           </Tabs>
           {/* Right: Filter Icon */}
-          <FilterDialog
-            trigger={
-              <ActionIcon 
-                variant="transparent" 
-                size="lg"
-                className="text-gray-600 hover:text-orange-600 cursor-pointer dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex-shrink-0"
-              >
-                <Filter size={20} />
-              </ActionIcon>
-            }
-            onFiltersChange={(filters) => {
-            }}
-          />
+          <div style={{ height: "32px", display: "flex", alignItems: "center" }}>
+            <FilterDialog
+              trigger={
+                <ActionIcon 
+                  variant="transparent" 
+                  size="lg"
+                  className="text-gray-600 hover:text-orange-600 cursor-pointer dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex-shrink-0"
+                >
+                  <Filter size={20} />
+                </ActionIcon>
+              }
+              onFiltersChange={(filters) => {
+              }}
+            />
+          </div>
           
         </Group>
       </Box>

@@ -2,9 +2,9 @@ import { MouseEvent } from 'react';
 
 interface DisabledStyles {
   opacity: number;
-  cursor: 'not-allowed';
+  cursor: "default";
   ':hover'?: {
-    cursor: 'not-allowed';
+    cursor: 'default';
     filter: 'grayscale(100%)';
   };
 }
@@ -25,9 +25,9 @@ interface DisabledResult {
 
 const getDisabledStyles = (baseColor: string = '#999'): DisabledStyles => ({
   opacity: 0.5,
-  cursor: 'not-allowed',
+    cursor: 'default',
   ':hover': {
-    cursor: 'not-allowed',
+    cursor: 'default',
     filter: 'grayscale(100%)',
   },
 });

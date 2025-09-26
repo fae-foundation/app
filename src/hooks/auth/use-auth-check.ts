@@ -10,8 +10,8 @@ export const useAuthCheck = () => {
   const { setProfileSelectModalOpen } = useProfileSelectStore();
   const { address } = useAccount();
 
-  // 完全认证判定：profile + sessionClient
-  const isAuthenticated = !!address && !!currentProfile && !!sessionClient && !loading;
+  // 优化认证判定：优先检查 sessionClient
+  const isAuthenticated = !!sessionClient && !loading;
   
   const checkAuthentication = (action: string = "此操作") => {
     if (loading) {
@@ -19,6 +19,12 @@ export const useAuthCheck = () => {
       return false;
     }
 
+    // 优先检查 sessionClient，如果有则直接通过
+    if (sessionClient) {
+      return true;
+    }
+
+    // 如果没有 sessionClient，则检查其他条件
     // 检查是否有钱包连接
     if (!address) {
       reconnectWallet();
@@ -26,8 +32,8 @@ export const useAuthCheck = () => {
       return false;
     }
 
-    // 检查是否选择了 profile
-    if (!sessionClient) {
+    // 检查是否有 profile
+    if (!currentProfile) {
       setProfileSelectModalOpen(true);
       toast.info(`Please select a profile to ${action}`);
       return false;

@@ -115,7 +115,7 @@ export function Footer() {
 
         <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-6">
           <p className="text-gray-400 text-sm text-center">
-            © 2025 Arctica Labs. Built with ❤️ for the decentralized fandoms.
+            © 2025 FAE Foundation. Built with ❤️ for the decentralized fandoms.
           </p>
           <div className="flex items-center space-x-4">
             <Link

@@ -35,7 +35,7 @@ export const CommentReactions = ({
         variant="ghost"
         size="sm"
         onClick={handleLike}
-        disabled={!isLoggedIn}
+        //disabled={!isLoggedIn}
         className={`flex items-center gap-1 transition-colors ${
           hasUpvoted 
             ? "text-red-500 dark:text-red-400" 

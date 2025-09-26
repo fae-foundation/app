@@ -280,12 +280,39 @@ export default function Header() {
                 onClick={() => setUploadDialogOpened(true)}
                 title="发布内容"
               >
-                <Plus className="h-6 w-6" strokeWidth={2.5} />
+                <Plus className="h-6 w-6" strokeWidth={3} />
               </Button>
             </nav>
             
             {/* User Actions */}
             <div className="flex flex-col items-center space-y-2 mt-auto">
+              {/* Feedback Button */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-10 w-10"
+                onClick={() => {
+                  if (window.Tally) {
+                    window.Tally.openPopup('mKba9z', {
+                      layout: 'modal',
+                      width: 700,
+                      onOpen: () => {
+                        console.log('反馈表单已打开');
+                      },
+                      onSubmit: (payload) => {
+                        console.log('反馈已提交:', payload);
+                      }
+                    });
+                  } else {
+                    // 备用方案：如果 Tally 未加载，使用外部链接
+                    window.open('https://tally.so/r/mKba9z', '_blank');
+                  }
+                }}
+                title="反馈"
+              >
+                <MessageSquare className="h-4 w-4" />
+              </Button>
+              
               {/* Theme Toggle */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -339,38 +366,6 @@ export default function Header() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-
-              {/* Feedback Button */}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-10 w-10"
-                onClick={() => {
-                  if (window.Tally) {
-                    window.Tally.openPopup('mKba9z', {
-                      layout: 'modal',
-                      width: 700,
-                      emoji: {
-                        text: '👋',
-                        animation: 'wave'
-                      },
-                      onOpen: () => {
-                        console.log('反馈表单已打开');
-                      },
-                      onSubmit: (payload) => {
-                        console.log('反馈已提交:', payload);
-                      }
-                    });
-                  } else {
-                    // 备用方案：如果 Tally 未加载，使用外部链接
-                    window.open('https://tally.so/r/mKba9z', '_blank');
-                  }
-                }}
-                title="反馈"
-              >
-                <MessageSquare className="h-4 w-4" />
-              </Button>
-
             </div>
           </Container>
         </AppShell.Header>
@@ -416,7 +411,7 @@ export default function Header() {
                 }}
                 className="rounded-full w-10 h-10 flex items-center justify-center"
               >
-                <Plus className="h-6 w-6" strokeWidth={2.5} />
+                <Plus className="h-6 w-6" strokeWidth={3} />
               </MantineButton>
 
               {/* 钱包按钮 */}
@@ -480,7 +475,7 @@ export default function Header() {
           <Drawer 
             opened={opened} 
             onClose={close} 
-            size="25%" 
+            size="30%" 
             padding="md"
             position="bottom"
             withCloseButton={false}
@@ -553,20 +548,6 @@ export default function Header() {
                   </Group>
                 </Group>
               </Group>
-
-              {/* 关于按钮 */}
-              <MantineButton
-                variant={pathname === "/about" ? "filled" : "subtle"}
-                color={pathname === "/about" ? "orange" : "gray"}
-                size="sm"
-                component={Link}
-                href="/about"
-                leftSection={<Info className="h-4 w-4" />}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {navT("home")}
-              </MantineButton>
-
               {/* 反馈按钮 */}
               <MantineButton
                 variant="subtle"
@@ -578,10 +559,6 @@ export default function Header() {
                     window.Tally.openPopup('mKba9z', {
                       layout: 'modal',
                       width: 700,
-                      emoji: {
-                        text: '👋',
-                        animation: 'wave'
-                      },
                       onOpen: () => {
                         console.log('反馈表单已打开');
                         setIsMobileMenuOpen(false);
@@ -598,6 +575,18 @@ export default function Header() {
                 }}
               >
                 反馈
+              </MantineButton>
+              {/* 关于按钮 */}
+              <MantineButton
+                variant={pathname === "/about" ? "filled" : "subtle"}
+                color={pathname === "/about" ? "orange" : "gray"}
+                size="sm"
+                component={Link}
+                href="/about"
+                leftSection={<Info className="h-4 w-4" />}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {navT("home")}
               </MantineButton>
             </Stack>
           </Drawer>
