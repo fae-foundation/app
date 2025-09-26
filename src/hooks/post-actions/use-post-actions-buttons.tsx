@@ -8,6 +8,13 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 
+// 自定义图标组件，用于显示emoji
+const EmojiIcon = ({ emoji, size = 18, ...props }: { emoji: string; size?: number; [key: string]: any }) => (
+  <span style={{ fontSize: size, lineHeight: 1 }} {...props}>
+    {emoji}
+  </span>
+);
+
 type ActionButtonConfig = {
   icon: any;
   label: string;
@@ -55,6 +62,22 @@ export const usePostActionsButtons = ({
     operations,
     isLoggedIn,
   } = usePostActions(post);
+
+  // 检测post类型并返回相应的图标
+  const getPostTypeIcon = () => {
+    const tags = "tags" in post.metadata && Array.isArray(post.metadata.tags) 
+      ? post.metadata.tags 
+      : [];
+    
+    if (tags.includes("cook")) {
+      return "🍪";
+    } else if (tags.includes("moment")) {
+      return "🩵";
+    }
+    return null; // 默认不显示图标
+  };
+
+  const postTypeIcon = getPostTypeIcon();
 
   const handleComment = () => {
     router.push(`/p/${post.id}`);
@@ -115,11 +138,11 @@ export const usePostActionsButtons = ({
 
   const buttons: PostActionButtons = {
     likeButton: {
-      icon: Heart,
+      icon: postTypeIcon ? (props: any) => <EmojiIcon emoji={postTypeIcon} {...props} /> : Heart,
       label: "Like",
       initialCount: likes,
-      strokeColor: "rgb(239, 68, 68)", // red-500
-      fillColor: "rgba(239, 68, 68, 0.9)",
+      strokeColor: "#ef4444", 
+      fillColor: "none",
       onClick: handleLike,
       isActive: hasUpvoted,
       shouldIncrementOnClick: true,
@@ -130,11 +153,10 @@ export const usePostActionsButtons = ({
       icon: MessageCircle,
       label: "Comment",
       initialCount: comments,
-      strokeColor: "rgb(59, 130, 246)", // blue-500
-      fillColor: "rgba(59, 130, 246, 0.8)",
+      strokeColor: "#3b82f6", 
+      fillColor: "none",
       onClick: handleComment,
       shouldIncrementOnClick: false,
-      //isActive: false,
       isDisabled: false,
       isUserLoggedIn: isLoggedIn,
     },
@@ -143,8 +165,8 @@ export const usePostActionsButtons = ({
       label: "Bookmark",
       isActive: hasBookmarked,
       initialCount: bookmarks,
-      strokeColor: "rgb(16, 185, 129)", // emerald-500
-      fillColor: "rgba(16, 185, 129, 0.8)",
+      strokeColor: "#10b981", 
+      fillColor: "none",
       shouldIncrementOnClick: true,
       onClick: handleBookmark,
       isDisabled: false,
@@ -155,13 +177,12 @@ export const usePostActionsButtons = ({
       label: "Share",
       isActive: false,
       initialCount: 0,
-      strokeColor: "rgb(107, 114, 128)", // gray-500
-      fillColor: "rgba(107, 114, 128, 0.8)",
+      strokeColor: "#6b7280", 
+      fillColor: "none",
       shouldIncrementOnClick: false,
       onClick: handleShare,
       hideCount: true,
       isUserLoggedIn: isLoggedIn,
-      isDisabled: false,
     },
   };
 

@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Bold, Italic, Underline, Strikethrough, Link, AtSign, MessageSquare, Plus, X, Search, Expand, Globe } from "lucide-react"
 import { TagDisplay } from "@/components/ui/tag-display"
+import { SearchResults } from "@/components/dialogs/search/search-results"
+import { useFeed } from "@/hooks/use-feed"
 //import { Input } from "@/components/ui/input"
 
 
@@ -43,18 +45,10 @@ export function UnifiedEditor({
   const [selectedTags, setSelectedTags] = useState<Tag[]>([])
   const titleRef = useRef<HTMLTextAreaElement>(null)
   const contentRef = useRef<HTMLTextAreaElement>(null)
+  
+  // 获取 feed 数据用于标签搜索
+  const { posts } = useFeed()
 
-  const suggestedTags: Tag[] = [
-    { name: "彩虹" },
-    { name: "彩虹六号" },
-    { name: "刺客信条" },
-    { name: "刺客信条I" },
-    { name: "rwby" },
-    { name: "刺客信条II" },
-    { name: "刺客信条III" },
-    { name: "刺客信条IV" },
-    { name: "刺客信条V" },
-  ]
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value
@@ -140,15 +134,16 @@ export function UnifiedEditor({
       <div className="px-4 py-2.5">
         <textarea
           ref={contentRef}
-          placeholder="分享你的想法... ... (必填)"
+          placeholder="分享你的想法 ..."
           value={content}
           onChange={handleContentChange}
           className="w-full text-gray-700 resize-none border-none outline-none bg-transparent placeholder-gray-400 text-sm dark:text-gray-300"
           rows={5}
           maxLength={5000}
         />
-        <div className="text-right text-xs text-muted-foreground">
-          {content.length}/5000
+        <div className="flex gap-1 justify-end text-xs text-muted-foreground">
+          {content.length}/5000 
+          <div className="text-destructive">*</div>
         </div>
       </div>
 
@@ -178,7 +173,7 @@ export function UnifiedEditor({
 
       {/* Tag Addition Modal */}
       <Dialog open={showTagModal} onOpenChange={setShowTagModal}>
-        <DialogContent className="sm:max-w-md z-[1200]" style={{ zIndex: 1200 }}>
+        <DialogContent className="sm:max-w-md z-[1000]" style={{ zIndex: 1000 }}>
           <DialogHeader>
             <DialogTitle className="text-lg font-semibold">添加标签</DialogTitle>
           </DialogHeader>
@@ -204,7 +199,6 @@ export function UnifiedEditor({
                   tags={selectedTags} 
                   onRemove={removeTagFromSelection}
                   showRemoveButton={true}
-                  className="border text-zinc-700 bg-zinc-50 border-black text-sm font-medium"
                 />
               </div>
             )}
@@ -212,43 +206,29 @@ export function UnifiedEditor({
             {/* Tag Suggestions */}
             {tagInput.length > 0 && (
               <div className="space-y-2">
-                <p className="text-sm font-medium text-gray-700">搜索结果:</p>
-                <div className="max-h-48 overflow-y-auto custom-scrollbar space-y-1">
-                  {suggestedTags
-                    .filter((tag) => tag.name.toLowerCase().includes(tagInput.toLowerCase()))
-                    .map((tag, index) => (
-                      <button
-                        key={`suggestion-${tag.name}-${index}`}
-                        type="button"
-                        onClick={() => addTagToSelection(tag)}
-                        disabled={selectedTags.find((t) => t.name === tag.name) !== undefined}
-                        className="w-full text-left p-3 rounded-lg transition-all duration-200 hover:bg-gray-50 flex items-center justify-between disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="text-gray-800 font-medium">#</span>
-                          <span className="text-teal-500 font-medium">{tag.name}</span>
-                        </div>
-                        <span className="text-gray-400 text-sm">{Math.floor(Math.random() * 10000)}参与</span>
-                      </button>
-                    ))}
-
-                  {/* Create new tag option */}
-                  {tagInput.length > 0 &&
-                    !suggestedTags.find((t) => t.name.toLowerCase() === tagInput.toLowerCase()) && (
-                      <button
-                        type="button"
-                        onClick={() => addTagToSelection({ name: tagInput })}
-                        disabled={selectedTags.find((t) => t.name === tagInput) !== undefined}
-                        className="w-full text-left p-3 rounded-lg transition-all duration-200 hover:bg-gray-50 flex items-center justify-between border-t border-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="text-gray-800 font-medium">#</span>
-                          <span className="font-medium text-zinc-700">{tagInput}</span>
-                        </div>
-                        <span className="text-gray-400 text-sm">创建新标签</span>
-                      </button>
-                    )}
-                </div>
+                <SearchResults 
+                  searchValue={tagInput} 
+                  selectedType="tag" 
+                  isLoading={false}
+                  feedPosts={posts}
+                  onTagClick={(tag) => addTagToSelection({ name: tag })}
+                />
+                
+                {/* Create new tag option */}
+                {tagInput.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => addTagToSelection({ name: tagInput })}
+                    disabled={selectedTags.find((t) => t.name === tagInput) !== undefined}
+                    className="w-full text-left p-3 rounded-lg transition-all duration-200 hover:bg-gray-50 flex items-center justify-between border-t border-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-gray-800 font-medium">#</span>
+                      <span className="font-medium text-zinc-700">{tagInput}</span>
+                    </div>
+                    <span className="text-gray-400 text-sm">创建新标签</span>
+                  </button>
+                )}
               </div>
             )}
 
@@ -275,7 +255,7 @@ export function UnifiedEditor({
         <div className="flex items-center justify-between">
           {/* Left: Formatting Tools */}
           <div className="flex items-center space-x-1 sm:space-x-3">
-            <Button type="button" variant="ghost" size="sm" onClick={() => formatText("bold")} className="p-1 h-8 w-8">
+            <Button type="button" variant="ghost" size="sm" onClick={() => formatText("bold")} className="p-1 h-8 w-8" disabled={true}>
               <Bold className="h-4 w-4" />
             </Button>
             <Button
@@ -283,6 +263,7 @@ export function UnifiedEditor({
               variant="ghost"
               size="sm"
               onClick={() => formatText("italic")}
+              disabled={true}
               className="p-1 h-8 w-8 hidden sm:flex"
             >
               <Italic className="h-4 w-4" />
@@ -292,6 +273,7 @@ export function UnifiedEditor({
               variant="ghost"
               size="sm"
               onClick={() => formatText("underline")}
+              disabled={true}
               className="p-1 h-8 w-8"
             >
               <Underline className="h-4 w-4" />
@@ -301,6 +283,7 @@ export function UnifiedEditor({
               variant="ghost"
               size="sm"
               onClick={() => formatText("strikethrough")}
+              disabled={true}
               className="p-1 h-8 w-8 "
             >
               <Strikethrough className="h-4 w-4" />
@@ -310,6 +293,7 @@ export function UnifiedEditor({
               variant="ghost"
               size="sm"
               onClick={() => formatText("link")}
+              disabled={true}
               className="p-1 h-8 w-8 hidden sm:flex"
             >
               <Link className="h-4 w-4" />
@@ -319,6 +303,7 @@ export function UnifiedEditor({
               variant="ghost"
               size="sm"
               onClick={() => formatText("mention")}
+              disabled={true}
               className="p-1 h-8 w-8 "
             >
               <AtSign className="h-4 w-4" />
@@ -328,6 +313,7 @@ export function UnifiedEditor({
               type="button"
               variant="ghost"
               size="sm"
+              disabled={true}
               className="p-1 h-8 w-8 "
             >
               <Globe className="h-4 w-4" />
@@ -336,6 +322,7 @@ export function UnifiedEditor({
               type="button"
               variant="ghost"
               size="sm"
+              disabled={true}
               className="p-1 h-8 w-8 "
             >
               <MessageSquare className="h-4 w-4" />
@@ -344,6 +331,7 @@ export function UnifiedEditor({
               type="button"
               variant="ghost"
               size="sm"
+              disabled={true}
               className="h-8 px-2 text-xs"
             >
               <Expand className="h-4 w-4" />

@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, ReactNode, useContext, useState } from "react";
+import { TagFilterProvider } from "./tag-filter-context";
 
 export type FeedViewMode = "list" | "masonry";
 
@@ -20,9 +21,11 @@ export function FeedProvider({ children, initialViewMode = "list" }: FeedProvide
   const [viewMode, setViewMode] = useState<FeedViewMode>(initialViewMode);
 
   return (
-    <FeedContext.Provider value={{ viewMode, setViewMode }}>
-      {children}
-    </FeedContext.Provider>
+    <TagFilterProvider>
+      <FeedContext.Provider value={{ viewMode, setViewMode }}>
+        {children}
+      </FeedContext.Provider>
+    </TagFilterProvider>
   );
 }
 

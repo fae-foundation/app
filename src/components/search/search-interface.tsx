@@ -30,7 +30,7 @@ import {
   //Moon,
   Search,
 } from "lucide-react"
-import { SearchResults } from "./search-results"
+import { SearchResults } from "@/components/dialogs/search/search-results"
 import { useRouter } from "next/navigation"
 
 interface SearchHistoryItem {
@@ -221,7 +221,16 @@ export function SearchInterface() {
         </Group>
 
         {searchValue.trim() ? (
-          <SearchResults searchValue={searchValue} selectedType={selectedType} isLoading={isSearching} />
+          <SearchResults 
+            searchValue={searchValue} 
+            selectedType={selectedType} 
+            isLoading={isSearching}
+            feedPosts={[]}
+            onTagClick={(tag) => {
+              // Handle tag click - could navigate to tag page or add to search
+              console.log('Tag clicked:', tag)
+            }}
+          />
         ) : (
           <Stack gap="sm">
             <Group justify="space-between" align="center">

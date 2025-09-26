@@ -3,6 +3,25 @@ import { addReaction, bookmarkPost, undoBookmarkPost, undoReaction } from "@lens
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
 import { useSharedPostActions } from "@/contexts/post-actions-context";
+import { LoggedInPostOperations } from "@lens-protocol/client";
+import { useAuthCheck } from "@/hooks/auth/use-auth-check";
+
+// Helper function to convert LoggedInPostOperations to BooleanPostOperations
+const convertToBooleanOperations = (operations: LoggedInPostOperations) => {
+  return {
+    hasUpvoted: operations.hasUpvoted,
+    hasBookmarked: operations.hasBookmarked,
+    hasReposted: operations.hasReposted.optimistic,
+    hasQuoted: operations.hasQuoted.optimistic,
+    canComment: operations.canComment.__typename === "PostOperationValidationPassed",
+    canRepost: operations.canRepost.__typename === "PostOperationValidationPassed",
+    canQuote: operations.canQuote.__typename === "PostOperationValidationPassed",
+    canBookmark: true,
+    canCollect: operations.canSimpleCollect.__typename === "SimpleCollectValidationPassed",
+    canTip: operations.canTip,
+    canDelete: operations.canDelete?.__typename === "PostOperationValidationPassed",
+  };
+};
 import { useLensAuthStore } from "@/stores/auth-store";
 import { toast } from "sonner";
 import { resolveUrl } from "@/utils/resolve-url";
@@ -15,11 +34,12 @@ export const usePostActions = (post: Post | null) => {
     useSharedPostActions();
 
   const { sessionClient, currentProfile, loading } = useLensAuthStore();
-  const isLoggedIn = !!currentProfile && !loading;
+  const { isAuthenticated } = useAuthCheck();
 
   useEffect(() => {
     if (post) {
-      initPostState(post);
+      // Pass the post.operations if available, otherwise let initPostState handle it
+      initPostState(post, post.operations || undefined);
     }
   }, [post, initPostState]);
   
@@ -42,7 +62,7 @@ export const usePostActions = (post: Post | null) => {
   const { stats, operations, isCommentSheetOpen, isCollectSheetOpen } = useMemo(
     () => ({
       stats: sharedState?.stats ?? post?.stats ?? { upvotes: 0, downvotes: 0, comments: 0, mirrors: 0, quotes: 0, bookmarks: 0, collects: 0 },
-      operations: sharedState?.operations ?? defaultOperations,
+      operations: sharedState?.operations ?? (post?.operations ? convertToBooleanOperations(post.operations) : defaultOperations),
       isCommentSheetOpen: sharedState?.isCommentSheetOpen ?? false,
       isCollectSheetOpen: sharedState?.isCollectSheetOpen ?? false,
     }),
@@ -163,7 +183,7 @@ export const usePostActions = (post: Post | null) => {
 
   const handleBookmark = useCallback(async () => {
     // Return early if user is not logged in or post is null
-    if (!isLoggedIn || !post) return null;
+    if (!isAuthenticated || !post) return null;
 
     if (!sessionClient?.isSessionClient()) {
       toast.error("Please connect your wallet to bookmark posts");
@@ -187,10 +207,10 @@ export const usePostActions = (post: Post | null) => {
       updatePostOperations(post.id, { hasBookmarked: currentlyBookmarked });
       updatePostStats(post.id, { bookmarks: currentCount });
     }
-  }, [post?.id, operations, stats.bookmarks, updatePostOperations, updatePostStats, isLoggedIn, sessionClient]);
+  }, [post?.id, operations, stats.bookmarks, updatePostOperations, updatePostStats, isAuthenticated, sessionClient]);
 
   const handleLike = useCallback(async () => {
-    if (!isLoggedIn || !post) return null;
+    if (!isAuthenticated || !post) return null;
 
     if (!sessionClient?.isSessionClient()) {
       toast.error("Please connect your wallet to like posts");
@@ -214,7 +234,7 @@ export const usePostActions = (post: Post | null) => {
       updatePostOperations(post.id, { hasUpvoted: currentlyLiked });
       updatePostStats(post.id, { upvotes: currentCount });
     }
-  }, [post?.id, operations, stats.upvotes, updatePostOperations, updatePostStats, isLoggedIn, sessionClient]);
+  }, [post?.id, operations, stats.upvotes, updatePostOperations, updatePostStats, isAuthenticated, sessionClient]);
 
   return {
     handleComment,
@@ -227,6 +247,6 @@ export const usePostActions = (post: Post | null) => {
     handleCollectSheetOpenChange,
     stats,
     operations,
-    isLoggedIn,
+    isLoggedIn: isAuthenticated,
   };
 };

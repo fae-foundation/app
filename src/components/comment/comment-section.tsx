@@ -8,13 +8,13 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { MessageCircle, Send } from "lucide-react";
 import { useComments } from "@/hooks/use-comments";
-import { usePostActions } from "@/hooks/post-actions/use-post-actions";
 import { useSharedPostActions } from "@/contexts/post-actions-context";
 import { useLensAuthStore } from "@/stores/auth-store";
 import { storageClient } from "@/lib/storage-client";
 import { useWalletClient } from "wagmi";
 import { toast } from "sonner";
 import { CommentView } from "./comment-view";
+import { useAuthCheck } from "@/hooks/auth/use-auth-check";
 
 interface CommentSectionProps {
   post: AnyPost;
@@ -46,10 +46,10 @@ export function CommentSection({
     refreshComments 
   } = useComments({ postId: post.id });
 
-  // Get post actions for the main post (only if it's a Post)
-  const { operations, isLoggedIn } = usePostActions(
-    post.__typename === "Post" ? post : null
-  );
+  // Get auth and wallet client
+  const { sessionClient, currentProfile, loading: authLoading } = useLensAuthStore();
+  const { data: walletClient } = useWalletClient();
+  const { isAuthenticated, checkAuthentication } = useAuthCheck();
 
   // Get shared post actions context for canComment logic
   const { getPostState, initPostState } = useSharedPostActions();
@@ -57,22 +57,30 @@ export function CommentSection({
   // Initialize post state if it's a Post
   React.useEffect(() => {
     if (post.__typename === "Post") {
-      initPostState(post);
+      initPostState(post, post.operations || undefined);
     }
   }, [post, initPostState]);
   
   const postState = post.__typename === "Post" ? getPostState(post.id) : undefined;
   const canComment = postState?.operations?.canComment ?? false;
-
-  // Get auth and wallet client
-  const { sessionClient } = useLensAuthStore();
-  const { data: walletClient } = useWalletClient();
+  
+  // Debug logging for comment permissions
+  React.useEffect(() => {
+    if (post.__typename === "Post") {
+      console.log("Comment Debug Info:", {
+        postId: post.id,
+        canComment: canComment,
+        postStateOperations: postState?.operations,
+        originalPostOperations: post.operations?.canComment,
+        isLoggedIn: isAuthenticated
+      });
+    }
+  }, [post, postState, canComment, isAuthenticated]);
 
   const handleSubmitComment = async () => {
     if (!newComment.trim() || isSubmitting) return;
 
-    if(!sessionClient?.isSessionClient()) {
-      toast.error("Please connect your wallet");
+    if (!checkAuthentication("comment")) {
       return;
     }
 
@@ -95,15 +103,15 @@ export function CommentSection({
       const { uri } = await storageClient.uploadAsJson(metadata);
 
       // Create comment using Lens Protocol
-      const result = await createPost(sessionClient, {
+      const result = await createPost(sessionClient!, {
         contentUri: uri,
         commentOn: {
           post: post.id,
         },
-        //feed: evmAddress("0xd74a3C23DB0BFEA48007BeA447a5D20C422242fb")//o-kitchen works-feed for uploading fanworks on o-kitchen
+        //feed: evmAddress("0xd74a3C23DB0BFEA48007BeA447a5D20C422242fb")//Arctica works-feed for uploading fanworks on Arctica
       })
         .andThen(handleOperationWith(walletClient))
-        .andThen(sessionClient.waitForTransaction);
+        .andThen(sessionClient!.waitForTransaction);
 
       if (result.isErr()) {
         toast.dismiss(pendingToast);

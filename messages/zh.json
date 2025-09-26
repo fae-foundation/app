@@ -5,7 +5,7 @@
     "onchainProof": "链上证明",
     "discover": "发现",
     "create": "创作",
-    "profile": "个人资料",
+    "profile": "我的个人资料",
     "language": "语言",
     "english": "English",
     "chinese": "中文"
@@ -15,6 +15,7 @@
     "selectProfile": "选择档案",
     "logOut": "退出登录",
     "connect": "连接",
+    "wallet": "钱包",
     "settings": "设置",
     "developing": "开发中",
     "disconnect": "断开连接",
@@ -23,7 +24,7 @@
   },
   "feedHeader":{
     "follow": "关注",
-    "home": "发现",
+    "explore": "发现",
     "latest": "最新"
   },
   "common": {
@@ -52,15 +53,15 @@
     "shareError": "分享失败，请重试"
   },
   "home": {
-    "title": "o-kitchen",
-    "subtitle": "O厨房:",
+    "title": "Arctica",
+    "subtitle": "北极圈:",
     "subtitleFull": "为爱发电的自由创作港",
-    "description": "o-kitchen是一个非营利的去中心化社交平台，基于开源区块链协议，专为同人作品创作而生。保护创作者的创作自由和发布权利。",
+    "description": "北极圈是一个非营利的去中心化社交门户，基于开源区块链协议，专为同人作品创作而生。保护创作者的创作自由和发布权利。",
     "connectWallet": "连接钱包",
     "getStarted": "开始体验",
     "readMore": "了解更多",
     "learnMore": "探索更多",
-    "cta": "去厨房整点吃的! 》》",
+    "cta": "去不冻港整点薯条吃! 》》",
     "tagline": "同人创作的避风港",
     "explore": "探索",
     "principles": {
@@ -75,7 +76,7 @@
     "sectionTitle": "去中心化同人圈",
     "mainTitle": "上传与分享作品的",
     "mainTitleHighlight": "安全港湾",
-    "platformDescription": "非营利去中心化同人作品社交平台",
+    "platformDescription": "非营利去中心化同人作品社交门户",
     "protocolDescription": "基于开源区块链协议，保护创作者的创作自由和发布权利",
     "features": {
       "antiCensorship": {
@@ -105,7 +106,7 @@
     },
     "techStack": {
       "title": "技术架构",
-      "subtitle": "基于最新Web3技术栈构建的现代化平台",
+      "subtitle": "基于最新Web3技术栈构建的现代化门户",
       "lens": {
         "title": "Lens Protocol",
         "description": "去中心化社交协议，构建开放的社交图谱"
@@ -158,9 +159,9 @@
       }
     },
     "cta": {
-      "title": "加入 o-kitchen 社区",
+      "title": "加入 Arctica 社区",
       "subtitle": "与全球创作者一起，在去中心化的港口自由创作",
-      "sectionTitle": "o-kitchen",
+      "sectionTitle": "Arctica",
       "sectionSubtitle": "链上同人创作安全港",
       "description1": "为创作行为提供链上记录",
       "description2": "为作品提供链上托管",
@@ -239,7 +240,7 @@
       "privacy": "隐私政策",
       "terms": "服务条款"
     },
-    "copyright": "© 2025 o-kitchen. 为去中心化同人创作网络倾情打造 ❤️",
+    "copyright": "© 2025 Arctica. 为去中心化同人创作网络倾情打造 ❤️",
     "poweredBy": "技术支持"
   },
   "what-is-chip": {
@@ -248,7 +249,7 @@
     "description": "链上证明是一种基于区块链技术的原创作品认证系统，为每一份原创内容提供不可篡改的所有权证明。",
     "whatIsChip": {
       "descriptionTitle":"链上证明是什么？",
-      "descriptionParagraph1": "链上证明是 o-kitchen 平台采用的区块链的发布数据认证系统。当用户发布内容时，系统将自动为该数据生成链上证明。",
+      "descriptionParagraph1": "链上证明是 Arctica 门户采用的区块链的发布数据认证系统。当用户发布内容时，系统将自动为该数据生成链上证明。",
       "descriptionParagraph2": "每个链上证明都拥有独一无二的证明ID，这个ID连同发布时间戳、数据摘要、发布者信息等关键数据一起被长期记录在区块链上，形成不可篡改的数字证书。",
       "descriptionParagraph3": "这确保了发布数据的完整性和可追溯性，也为整个社区提供了透明、可信的数据验证机制。"
     },
@@ -309,12 +310,12 @@
       }
     },
     "whyOkitchen": {
-      "title": "为什么选择 o-kitchen ？",
+      "title": "为什么选择 Arctica ？",
       "description": "我们致力于为创作者社区提供最佳的创作与社交体验",
       "reason1": {
         "title": "社区驱动",
         "subtitle":"由创作者社区共同治理和发展",
-        "description": "o-kitchenn 未来将是一个完全由创作者社区驱动的平台，所有重要决策都由社区成员共同参与制定，确保平台始终服务于创作者的真实需求。"
+        "description": "Arctican 未来将是一个完全由创作者社区驱动的平台，所有重要决策都由社区成员共同参与制定，确保平台始终服务于创作者的真实需求。"
       },
       "reason2": {
         "title": "开源透明",

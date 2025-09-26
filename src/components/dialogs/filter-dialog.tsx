@@ -3,14 +3,17 @@
 import { Modal, Button, Card, Group, Stack, Text, UnstyledButton } from "@mantine/core"
 import { Settings, Globe, Star, AlertTriangle, Ban, Shield, Heart, Brain, Hash, Users } from "lucide-react"
 import { useState } from "react"
-import { useDisabled } from "@/utils/disabled"
+//import { useDisabled } from "@/utils/disabled"
+import { useTagFilter } from "@/contexts/tag-filter-context"
 
+/*
 interface FilterOption {
   value: string
   label: string
   icon?: React.ReactNode
   description?: string
 }
+*/
 
 const RATING_OPTIONS = [
   {
@@ -81,32 +84,43 @@ const CATEGORY_OPTIONS = [
   { value: "multi-relationship", label: "多元", icon: <Users className="h-4 w-4 text-orange-500" /> },
 ]
 
+
 interface FilterDialogProps {
   trigger?: React.ReactNode
   onFiltersChange?: (filters: {
     categories: string
-    sortBy: string
-    timeRange: string[]
+    rating: string
+    warning: string[]
+    tags: string[]
   }) => void
 }
 
 export function FilterDialog({ trigger, onFiltersChange }: FilterDialogProps) {
   const [showFilterSheet, setShowFilterSheet] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState("")
-  const [selectedSortBy, setSelectedSortBy] = useState("latest")
-  const [selectedTimeRange, setSelectedTimeRange] = useState<string[]>([])
+  const [selectedRating, setSelectedRating] = useState("")
+  const [selectedWarning, setSelectedWarning] = useState<string[]>([])
+  
+  const { 
+    tagFilter, 
+    addPresetTag, 
+    removePresetTag, 
+    clearPresetTags,
+  } = useTagFilter()
 
   const handleReset = () => {
     setSelectedCategory("")
-    setSelectedSortBy("latest")
-    setSelectedTimeRange([])
+    setSelectedRating("")
+    setSelectedWarning([])
+    clearPresetTags()
   }
 
   const updateFilters = () => {
     onFiltersChange?.({
       categories: selectedCategory,
-      sortBy: selectedSortBy,
-      timeRange: selectedTimeRange,
+      rating: selectedRating,
+      warning: selectedWarning,
+      tags: tagFilter.allTags,
     })
   }
 
@@ -124,7 +138,7 @@ export function FilterDialog({ trigger, onFiltersChange }: FilterDialogProps) {
         title={
           <Group justify="center" gap="xs">
             <Settings size={16} />
-            <Text fw={600} size="lg">投稿分类筛选器</Text>
+            <Text fw={600} size="lg" c="#1c1c1c">投稿分类筛选器-并选</Text>
           </Group>
         }
       >
@@ -146,14 +160,27 @@ export function FilterDialog({ trigger, onFiltersChange }: FilterDialogProps) {
                   {CATEGORY_OPTIONS.map((option) => (
                     <UnstyledButton
                       key={option.value}
-                      onClick={() => setSelectedCategory(option.value)}
+                      onClick={() => {
+                        // 频道单选
+                        if (selectedCategory === option.value) {
+                          setSelectedCategory("")
+                          removePresetTag(option.value)
+                        } else {
+                          const currentCategoryTag = CATEGORY_OPTIONS.find(category => category.value === selectedCategory)
+                          if (currentCategoryTag) {
+                            removePresetTag(currentCategoryTag.value)
+                          }
+                          setSelectedCategory(option.value)
+                          addPresetTag(option.value)
+                        }
+                      }}
                       style={{
                         width: "calc(50% - 4px)",
                         padding: 12,
                         borderRadius: 8,
                         border: "2px solid",
-                        borderColor: selectedCategory === option.value ? "#868e96" : "#e9ecef",
-                        background: selectedCategory === option.value ? "#f8f9fa" : "white",
+                        borderColor: (selectedCategory === option.value || tagFilter.presetTags.includes(option.value)) ? "#ff6b35" : "#e9ecef",
+                        background: (selectedCategory === option.value || tagFilter.presetTags.includes(option.value)) ? "#fff5f0" : "white",
                         transition: "all 0.2s",
                       }}
                     >
@@ -183,14 +210,28 @@ export function FilterDialog({ trigger, onFiltersChange }: FilterDialogProps) {
                   {RATING_OPTIONS.map((option) => (
                     <UnstyledButton
                       key={option.value}
-                      onClick={() => setSelectedSortBy(option.value)}
+                      onClick={() => {
+                        // 分级单选
+                        if (selectedRating === option.value) {
+                          setSelectedRating("")
+                          removePresetTag(option.value)
+                        } else {
+                          // 清除之前选中的分级标签
+                          const currentRatingTag = RATING_OPTIONS.find(rating => rating.value === selectedRating)
+                          if (currentRatingTag) {
+                            removePresetTag(currentRatingTag.value)
+                          }
+                          setSelectedRating(option.value)
+                          addPresetTag(option.value)
+                        }
+                      }}
                       style={{
                         minHeight: "60px",
                         padding: 12,
                         borderRadius: 8,
                         border: "2px solid",
-                        borderColor: selectedSortBy === option.value ? "#868e96" : "#e9ecef",
-                        background: selectedSortBy === option.value ? "#f8f9fa" : "white",
+                        borderColor: (selectedRating === option.value || tagFilter.presetTags.includes(option.value)) ? "#ff6b35" : "#e9ecef",
+                        background: (selectedRating === option.value || tagFilter.presetTags.includes(option.value)) ? "#fff5f0" : "white",
                         transition: "all 0.2s",
                         display: "flex",
                         alignItems: "center",
@@ -226,12 +267,17 @@ export function FilterDialog({ trigger, onFiltersChange }: FilterDialogProps) {
                     <UnstyledButton
                       key={option.value}
                       onClick={() => {
-                        if (selectedTimeRange.includes(option.value)) {
-                          setSelectedTimeRange((prev) => 
+                        if (selectedWarning.includes(option.value)) {
+                          setSelectedWarning((prev) => 
                             prev.filter((t) => t !== option.value)
                           )
                         } else {
-                          setSelectedTimeRange((prev) => [...prev, option.value])
+                          setSelectedWarning((prev) => [...prev, option.value])
+                        }
+                        if (tagFilter.presetTags.includes(option.value)) {
+                          removePresetTag(option.value)
+                        } else {
+                          addPresetTag(option.value)
                         }
                       }}
                       style={{
@@ -240,8 +286,8 @@ export function FilterDialog({ trigger, onFiltersChange }: FilterDialogProps) {
                         padding: 12,
                         borderRadius: 8,
                         border: "2px solid",
-                        borderColor: selectedTimeRange.includes(option.value) ? "#868e96" : "#e9ecef",
-                        background: selectedTimeRange.includes(option.value) ? "#f8f9fa" : "white",
+                        borderColor: (selectedWarning.includes(option.value) || tagFilter.presetTags.includes(option.value)) ? "#ff6b35" : "#e9ecef",
+                        background: (selectedWarning.includes(option.value) || tagFilter.presetTags.includes(option.value)) ? "#fff5f0" : "white",
                         transition: "all 0.2s",
                         display: "flex",
                         alignItems: "center",
@@ -262,7 +308,7 @@ export function FilterDialog({ trigger, onFiltersChange }: FilterDialogProps) {
             </Card>
           </Group>
 
-          {/* Bottom Action Buttons */}
+          {/* Bottom Action Buttons 目前确定按钮作为摆设 */}
           <Group justify="flex-end" gap="sm" pt="md">
             <Button
               type="button"
@@ -273,14 +319,12 @@ export function FilterDialog({ trigger, onFiltersChange }: FilterDialogProps) {
               重置
             </Button>
             <Button
-              {...useDisabled({
-                isDisabled: true,
-                baseStyles: { paddingLeft: 24, paddingRight: 24 }
-              })}
               onClick={() => {
                 updateFilters()
                 setShowFilterSheet(false)
               }}
+              style={{ paddingLeft: 24, paddingRight: 24 }}
+              className="bg-orange-500 hover:bg-orange-600"
             >
               确定
             </Button>

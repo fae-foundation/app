@@ -28,6 +28,7 @@ export function FeedViewToggle() {
         style={{
           backgroundColor: "var(--mantine-color-white)",
           boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.1)",
+          borderRadius: "100%",
         }}
       >
         {viewMode === "list" ? (

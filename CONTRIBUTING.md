@@ -1,8 +1,8 @@
 # 贡献指南 / Contributing Guide
 
-我们欢迎社区贡献！请遵循以下步骤来参与 O-Kitchen 项目的开发。
+我们欢迎社区贡献！请遵循以下步骤来参与 Arctica 项目的开发。
 
-We welcome community contributions! Please follow these guidelines to contribute to the O-Kitchen project.
+We welcome community contributions! Please follow these guidelines to contribute to the Arctica project.
 
 ## 如何贡献 / How to Contribute
 
@@ -24,12 +24,10 @@ Before contributing, please ensure you have:
 
 # 2. 克隆您的 fork
 # 2. Clone your fork
-git clone https://github.com/o-kitchen/app.git
-cd o-kitchen
 
 # 3. 添加上游仓库
 # 3. Add upstream repository
-git remote add upstream https://github.com/original-owner/o-kitchen.git
+git remote add upstream https://github.com/fae-foundation/app.git
 
 # 4. 安装依赖
 # 4. Install dependencies
@@ -243,7 +241,7 @@ By contributing, you agree that your contributions will be licensed under the AG
 
 ---
 
-感谢您对 O-Kitchen 项目的贡献！🎉
-Thank you for contributing to O-Kitchen! 🎉
+感谢您对 Arctica 项目的贡献！🎉
+Thank you for contributing to Arctica! 🎉
 
 **最后更新 / Last Updated**: 2025-08-26

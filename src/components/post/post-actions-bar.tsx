@@ -12,7 +12,7 @@ export const PostActionsBar = ({ post }: { post: Post }) => {
   const { viewMode } = useFeedContext();
   const { likeButton, commentButton, bookmarkButton, shareButton } = usePostActionsButtons({ post });
 
-  const rightButtons = [commentButton, likeButton];
+  const rightButtons = [likeButton];
   const leftButtons = [bookmarkButton, shareButton];
 
   if (viewMode === "masonry") {
@@ -39,7 +39,7 @@ export const PostActionsBar = ({ post }: { post: Post }) => {
 
   return (
     <TooltipProvider delayDuration={300}>
-      <div ref={actionBarRef} className="flex items-center justify-between w-full border-t border-gray-100">
+      <div ref={actionBarRef} className="flex items-center justify-between w-full border-t border-gray-100 pt-1">
         {/* Left side - Interactive buttons */}
         <div className="flex items-center gap-2 sm:gap-4">
           {leftButtons.map((button) => (

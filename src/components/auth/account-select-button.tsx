@@ -62,7 +62,7 @@ export function SelectAccountButton({ account, onSuccess }: { account: Account; 
       setProfileSelectModalOpen(false);
       onSuccess?.();
       // 登录成功后跳转到 feed 页面
-      router.push("/feed");
+      //router.push("/feed");
     } catch (err) {
       console.error("Error logging in:", err);
       toast.error(err instanceof Error ? err.message : "Failed to log in. Please try again.");

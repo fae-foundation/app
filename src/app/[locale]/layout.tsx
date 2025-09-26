@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "o-kitchen",
+  title: "Arctica",
   description:
     "A modern web application for interacting with the Lens Protocol",
 };

@@ -31,7 +31,7 @@ interface PostActionState {
 
 interface PostActionsContextType {
   getPostState: (postId: string) => PostActionState | undefined;
-  initPostState: (post: Post) => void;
+  initPostState: (post: Post, operations?: LoggedInPostOperations) => void;
   updatePostState: (postId: string, updates: Partial<Omit<PostActionState, "post">>) => void;
   updatePostStats: (postId: string, updates: Partial<PostStats>) => void;
   updatePostOperations: (postId: string, updates: Partial<any>) => void;
@@ -62,6 +62,14 @@ export const PostActionsProvider = ({ children }: { children: ReactNode }) => {
   }), []);
 
   const convertToBooleanOperations = useCallback((operations: LoggedInPostOperations): BooleanPostOperations => {
+    // Debug logging for canComment validation
+    console.log("convertToBooleanOperations Debug:", {
+      canComment: operations.canComment,
+      canCommentType: operations.canComment.__typename,
+      canCommentPassed: operations.canComment.__typename === "PostOperationValidationPassed",
+      fullOperations: operations
+    });
+    
     return {
       hasUpvoted: operations.hasUpvoted,
       hasBookmarked: operations.hasBookmarked,
@@ -78,22 +86,22 @@ export const PostActionsProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const initPostState = useCallback(
-    (post: Post) => {
+    (post: Post, operations?: LoggedInPostOperations) => {
       setPostStates((prevStates) => {
-        if (!prevStates.has(post.id)) {
-          const newStates = new Map(prevStates);
-          newStates.set(post.id, {
-            post: post,
-            stats: { ...post.stats },
-            operations: post.operations ? convertToBooleanOperations(post.operations) : { ...defaultOperations },
-            isCommentSheetOpen: false,
-            isCollectSheetOpen: false,
-            initialCommentUrlSynced: false,
-            initialCollectUrlSynced: false,
-          });
-          return newStates;
-        }
-        return prevStates;
+        const newStates = new Map(prevStates);
+        const currentState = prevStates.get(post.id);
+        
+        // Always update the post state, but preserve existing UI state if it exists
+        newStates.set(post.id, {
+          post: post,
+          stats: { ...post.stats },
+          operations: operations ? convertToBooleanOperations(operations) : (post.operations ? convertToBooleanOperations(post.operations) : { ...defaultOperations }),
+          isCommentSheetOpen: currentState?.isCommentSheetOpen ?? false,
+          isCollectSheetOpen: currentState?.isCollectSheetOpen ?? false,
+          initialCommentUrlSynced: currentState?.initialCommentUrlSynced ?? false,
+          initialCollectUrlSynced: currentState?.initialCollectUrlSynced ?? false,
+        });
+        return newStates;
       });
     },
     [defaultOperations, convertToBooleanOperations],

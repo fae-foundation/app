@@ -341,7 +341,7 @@ export default function WhatIsChipPage() {
             </div>
           </div>
 
-          {/* Why o-kitchen */}
+          {/* Why Arctica */}
           <div className="mb-20">
             <div className="text-center mb-12">
               <h2 className="text-4xl font-bold text-neutral-900 mb-4 dark:text-neutral-100">

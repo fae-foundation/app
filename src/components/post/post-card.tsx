@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, Avatar, Text, Group, Stack, Box, Image, ActionIcon, Tooltip } from '@mantine/core';
 import { TokenIdDisplay } from "@/components/token-id-display";
 import { Post } from "@lens-protocol/client";
@@ -7,6 +7,8 @@ import { resolveUrl } from "@/utils/resolve-url";
 import { formatTimestamp, checkIfOriginal, extractAttachments, getLicenseType } from "@/utils/post-helpers";
 import { useRouter } from "next/navigation";
 import { TagDisplay } from "@/components/ui/tag-display";
+import { useTagFilter } from "@/contexts/tag-filter-context";
+import { ImageDialog } from "@/components/dialogs/image-dialog";
 
 interface PostCardProps {
   post: Post;
@@ -15,6 +17,9 @@ interface PostCardProps {
 
 export function PostCard({ post, disableNavigation = false }: PostCardProps) {
   const router = useRouter();
+  const { addCustomTag } = useTagFilter();
+  const [imageDialogOpen, setImageDialogOpen] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   // Extract data from original Post structure
   const displayName = post.author.metadata?.name || post.author.username?.localName || "Unknown User";
@@ -35,6 +40,11 @@ export function PostCard({ post, disableNavigation = false }: PostCardProps) {
   const tags = "tags" in post.metadata && Array.isArray(post.metadata.tags) 
     ? post.metadata.tags 
     : [];
+
+  const handleImageClick = (index: number) => {
+    setSelectedImageIndex(index);
+    setImageDialogOpen(true);
+  };
   
   return (
     <Card 
@@ -49,7 +59,11 @@ export function PostCard({ post, disableNavigation = false }: PostCardProps) {
       style={{
         cursor: !disableNavigation ? 'pointer' : 'default'
       }}
-      onClick={() => !disableNavigation && router.push(`/p/${post.id}`)}
+      onClick={(e) => {
+        if (!disableNavigation && !imageDialogOpen) {
+          router.push(`/p/${post.id}`)
+        }
+      }}
     >
       {/* Header - Author info with dynamic sizing */}
       <Group gap="sm" align="flex-start" mb="md">
@@ -124,7 +138,10 @@ export function PostCard({ post, disableNavigation = false }: PostCardProps) {
       
       {/* Tags Section */}
       <Box mb="md">
-        <TagDisplay tags={tags} />
+        <TagDisplay 
+          tags={tags} 
+          onTagClick={addCustomTag}
+        />
       </Box>
       
       {/* Media attachments */}
@@ -144,6 +161,10 @@ export function PostCard({ post, disableNavigation = false }: PostCardProps) {
                   objectFit: 'cover',
                   flexShrink: 0,
                 }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleImageClick(index);
+                }}
               />
             ))}
           </Group>
@@ -152,6 +173,15 @@ export function PostCard({ post, disableNavigation = false }: PostCardProps) {
       
       {/* Actions bar */}
         <PostActionsBar post={post} />
+      
+      {/* Image Dialog */}
+      <ImageDialog
+        opened={imageDialogOpen}
+        onClose={() => setImageDialogOpen(false)}
+        images={attachments.map(attachment => attachment.item)}
+        initialSlide={selectedImageIndex}
+        postId={post.id}
+      />
     </Card>
   );
 }

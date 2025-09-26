@@ -13,10 +13,10 @@ const getChains = () => {
 
 export const config = createConfig(
   getDefaultConfig({
-    appName: 'o-kitchen',
+    appName: 'Arctica',
     appDescription: "Decentralized fandoms",
-    appUrl: "https://o-harbor.vercel.app",
-    appIcon: "https://o-harbor.vercel.app/logo.jpg",
+    appUrl: "https://arctica.vercel.app",
+    appIcon: "https://arctica.vercel.app/logo.jpg",
     chains: getChains(),
     walletConnectProjectId: env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
     transports: {

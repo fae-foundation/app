@@ -5,6 +5,7 @@ import { useState } from "react"
 import { X } from "lucide-react"
 import { UploadButton } from "./upload-buttons"
 import { ArtDialog } from "../cook/art-dialog"
+import { MDialog } from "../moment/moment-dialog"
 
 interface UploadDialogProps {
   opened: boolean
@@ -16,27 +17,28 @@ interface UploadDialogProps {
 export function UploadDialog({ opened, onClose, onButtonClick, selectedAction }: UploadDialogProps) {
   const theme = useMantineTheme()
   const [artDialogOpened, setArtDialogOpened] = useState(false)
+  const [momentDialogOpened, setMomentDialogOpened] = useState(false)
 
   const uploadOptions = [
     {
       label: "Cook", 
-      description: "Fan Work",
+      description: "Upload Fan Work",
       icon: "🍪",
       color: "#f97316", // Orange
       disabled: false,
     },
     {
       label: "Moment",
-      description: "Capture memories",
+      description: "Capture Memories",
       icon: "🩵",
-      color: "#f97316", // Orange
-      disabled: true,
+      color: "#87CEEB", // Blue
+      disabled: false,
     },
     {
       label: "Event",
       description: "Comic Con",
       icon: "🎫",
-      color: "#f97316", // Orange
+      color: "#fcdb03", // Yellow
       disabled: true,
     },
   ]
@@ -134,6 +136,8 @@ export function UploadDialog({ opened, onClose, onButtonClick, selectedAction }:
                 onClick={() => {
                   if (option.label === "Cook") {
                     setArtDialogOpened(true)
+                  } else if (option.label === "Moment") {
+                    setMomentDialogOpened(true)
                   } else {
                     onButtonClick(option.label)
                   }
@@ -151,6 +155,16 @@ export function UploadDialog({ opened, onClose, onButtonClick, selectedAction }:
         onClose={() => setArtDialogOpened(false)} 
         onComplete={() => {
           setArtDialogOpened(false)  
+          onClose()                  
+        }}
+      />
+      
+      {/* Moment Dialog */}
+      <MDialog 
+        opened={momentDialogOpened} 
+        onClose={() => setMomentDialogOpened(false)} 
+        onComplete={() => {
+          setMomentDialogOpened(false)  
           onClose()                  
         }}
       />

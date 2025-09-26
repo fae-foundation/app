@@ -122,7 +122,7 @@ export function SelectAccountMenu({ open, onOpenChange }: { open?: boolean; onOp
   return (
     <>
       <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-        <DialogContent className="max-w-96">
+        <DialogContent className="max-w-96" style={{ zIndex: 1300 }}>
           <DialogHeader>
             <DialogTitle className="h-8 text-base flex items-center">Select profile</DialogTitle>
           </DialogHeader>

@@ -29,7 +29,7 @@ export function Feed() {
 
   return (
     <TooltipProvider>
-      <div className={`${viewMode === 'list' ? 'max-w-xl' : 'max-w-5xl'} mx-auto space-y-6`}>
+      <div className={`${viewMode === 'list' ? 'max-w-xl' : 'max-w-5xl'} mx-auto space-y-4`}>
         {/* 出错提示 */}
         {error && (
           <div className="bg-red-100 text-red-700 px-4 py-2 rounded mb-4 text-center">
@@ -50,7 +50,7 @@ export function Feed() {
           </div>
         )}
         {/* 帖子导航栏 */}
-        <div className="text-center mb-8">
+        <div className="text-center">
           <FeedHeader />
         </div>
         {/* 帖子列表 */}

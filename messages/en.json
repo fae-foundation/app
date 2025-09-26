@@ -5,7 +5,7 @@
     "onchainProof": "Onchain Proof",
     "discover": "Discover",
     "create": "Create",
-    "profile": "Profile",
+    "profile": "My Profile",
     "language": "Language",
     "english": "English",
     "chinese": "中文"
@@ -15,6 +15,7 @@
     "selectProfile": "Select Profile",
     "logOut": "Log out",
     "connect": "Connect",
+    "wallet": "Wallet",
     "settings": "Settings",
     "developing": "developing",
     "disconnect": "Disconnect",
@@ -23,7 +24,7 @@
   },
   "feedHeader":{
     "follow": "Follow",
-    "home": "Discover",
+    "explore": "Discover",
     "latest": "Latest"
   },
   "common": {
@@ -52,15 +53,15 @@
     "shareError": "Share failed, please try again"
   },
   "home": {
-    "title": "o-kitchen",
+    "title": "Arctica",
     "subtitle": "/ Decentralized ",
     "subtitleFull": "Fandoms /",
-    "description": "o-kitchen is a nonprofit decentralized social platform for fanworks powered by open-source blockchain protocol. Protecting freedom of creativity and publishing rights for fanart creators.",
+    "description": "Arctica is a nonprofit decentralized social platform for fanworks powered by open-source blockchain protocol. Protecting freedom of creativity and publishing rights for fanart creators.",
     "connectWallet": "Connect Wallet",
     "getStarted": "Start Here",
     "readMore": "Read More",
     "learnMore": "Explore",
-    "cta": "Go to the o-kitchen! >>",
+    "cta": "Go to the Arctica! >>",
     "tagline": "A SAFE HARBOR FOR FANDOMS",
     "explore": "Explore",
     "principles": {
@@ -158,9 +159,9 @@
       }
     },
     "cta": {
-      "title": "Join o-kitchen Community",
+      "title": "Join Arctica Community",
       "subtitle": "Create freely with global creators in a decentralized harbor",
-      "sectionTitle": "o-kitchen",
+      "sectionTitle": "Arctica",
       "sectionSubtitle": "Decentralized Fandoms",
       "description1": "On-chain records for publishing",
       "description2": "On-chain hosting for fanworks",
@@ -211,7 +212,7 @@
         "title": "Public Transparency",
         "description": "Everyone can view and verify the authenticity of proofs"
       },
-      "permanentStorage": {
+      "long-termStorage": {
         "title": "Long-term Storage",
         "description": "Proof information is long-term stored and will not be lost or damaged"
       }
@@ -239,7 +240,7 @@
       "privacy": "Privacy Policy",
       "terms": "Terms of Service"
     },
-    "copyright": "© 2025 o-kitchen. Built with ❤️ for the decentralized fanart networks.",
+    "copyright": "© 2025 Arctica. Built with ❤️ for the decentralized fanart networks.",
     "poweredBy": "Powered by"
   },
   "what-is-chip": {
@@ -248,8 +249,8 @@
     "description": "On-chain proof is an original work certification system based on blockchain technology, which provides an unalterable proof of ownership for each original content.",
     "whatIsChip": {
       "descriptionTitle": "What is Onchain Proof?",
-      "descriptionParagraph1": "On-chain proof is a blockchain-based data certification system adopted by the o-kitchen platform. When a user publishes content, the system automatically generates an on-chain proof for that data.",
-      "descriptionParagraph2": "Each on-chain proof has a unique proof ID. This ID, along with key data such as the publication timestamp and a data summary, is permanently recorded on the blockchain, forming an immutable digital certificate.",
+      "descriptionParagraph1": "On-chain proof is a blockchain-based data certification system adopted by the Arctica platform. When a user publishes content, the system automatically generates an on-chain proof for that data.",
+      "descriptionParagraph2": "Each on-chain proof has a unique proof ID. This ID, along with key data such as the publication timestamp and a data summary, is long-termly recorded on the blockchain, forming an immutable digital certificate.",
       "descriptionParagraph3": "This ensures the integrity and traceability of the published data and provides a transparent and trustworthy data verification mechanism for the entire community."
     },
     "start":{
@@ -304,17 +305,17 @@
         "description": "Anyone can view and verify the authenticity of the proof."
       },
       "reason4": {
-        "title": "Permanent Storage",
-        "description": "The proof information is permanently stored and will not be lost or corrupted."
+        "title": "long-term Storage",
+        "description": "The proof information is long-termly stored and will not be lost or corrupted."
       }
     },
     "whyOkitchen": {
-      "title": "Why o-kitchen?",
+      "title": "Why Arctica?",
       "description": "We are committed to providing the best creation and social experience for the creator community.",
       "reason1": {
         "title": "Community-Driven",
         "subtitle": "Governed and developed by the creator community.",
-        "description": "o-kitchen will be a platform completely driven by the creator community in the future. All important decisions will be made with the participation of community members, ensuring that the platform always serves the real needs of creators."
+        "description": "Arctica will be a platform completely driven by the creator community in the future. All important decisions will be made with the participation of community members, ensuring that the platform always serves the real needs of creators."
       },
       "reason2": {
         "title": "Open Source & Transparent",
@@ -333,7 +334,7 @@
       }
     },
     "callToAction": {
-      "title": "Start Your Journey with o-kitchen",
+      "title": "Start Your Journey with Arctica",
       "subtitle": "Certify your publishing data and join the decentralized creation community",
       "description": "Let every creation sail freely in this sea 🚢✨",
       "button1": "Join Now",

@@ -54,6 +54,8 @@ import { UnifiedEditor } from "@/components/editer/UnifiedEditor"
 import { ToggleButton } from "@/components/editer/ToggleButton"
 import { ImageUpload } from "@/components/editer/ImageUpload"
 import { handleOperationWith } from "@lens-protocol/client/viem"
+import { evmAddress } from "@lens-protocol/client"
+import { env } from "@/lib/env"
 import { useTranslations } from "next-intl";
 
 
@@ -365,7 +367,9 @@ export default function CreatePage() {
 
       await post(client, {
         contentUri: uri,
-        //feed,
+        feed: evmAddress(env.NEXT_PUBLIC_ENVIRONMENT === "development" 
+          ? env.NEXT_PUBLIC_COOK_ADDRESS_TESTNET 
+          : env.NEXT_PUBLIC_COOK_ADDRESS),
         //actions,
       })
       .andThen(handleOperationWith(walletClient))

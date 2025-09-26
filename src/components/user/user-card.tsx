@@ -33,7 +33,7 @@ export const UserCard = ({
     if (linkProfile) {
       const profileUsername = username || account?.username?.localName;
       if (profileUsername) {
-        router.push(`/profile/${profileUsername}`);
+        router.push(`/u/${profileUsername}`);
       }
     }
   };

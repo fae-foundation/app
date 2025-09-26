@@ -28,6 +28,8 @@ import {
   Search,
 } from "lucide-react"
 import { SearchResults } from "@/components/dialogs/search/search-results"
+import { useTagFilter } from "@/contexts/tag-filter-context"
+import { useFeed } from "@/hooks/use-feed"
 
 interface SearchHistoryItem {
   id: string
@@ -38,8 +40,8 @@ interface SearchHistoryItem {
 
 const searchTypeConfig = {
   tag: { icon: Hash, label: "Tag" },
-  people: { icon: User, label: "People" },
   content: { icon: FileText, label: "Content" },
+  people: { icon: User, label: "User" },
   token: { icon: Key, label: "Token ID" },
 }
 
@@ -54,20 +56,16 @@ export function SearchDialog({ opened, onClose }: SearchDialogProps) {
   const [searchValue, setSearchValue] = useState("")
   const [selectedType, setSelectedType] = useState<keyof typeof searchTypeConfig>("tag")
   const [isSearching, setIsSearching] = useState(false)
-  const [searchHistory, setSearchHistory] = useState<SearchHistoryItem[]>([
-    { id: "1", text: "刺客信条", type: "tag", timestamp: new Date() },
-    { id: "2", text: "刺客信条I", type: "tag", timestamp: new Date() },
-    { id: "3", text: "刺客信条II", type: "tag", timestamp: new Date() },
-    { id: "4", text: "刺客信条III", type: "tag", timestamp: new Date() },
-    { id: "5", text: "刺客信条IV", type: "tag", timestamp: new Date() },
-    { id: "6", text: "突发恶疾", type: "content", timestamp: new Date() },
-    { id: "7", text: "amy acker", type: "tag", timestamp: new Date() },
-    { id: "8", text: "17", type: "token", timestamp: new Date() },
-    { id: "9", text: "成分复杂", type: "content", timestamp: new Date() },
-    { id: "10", text: "镇魂真的能防搜吗？", type: "content", timestamp: new Date() },
-    { id: "11", text: "segment7", type: "people", timestamp: new Date() },
-    { id: "12", text: "阿拉贡伞状防御", type: "people", timestamp: new Date() },
-  ])
+  
+  const { 
+    addCustomTag,
+    setSearchQuery,
+  } = useTagFilter()
+  
+  // 使用feed hook获取帖子数据
+  const { posts } = useFeed()
+  
+  const [searchHistory, setSearchHistory] = useState<SearchHistoryItem[]>([])
 
   useEffect(() => {
     if (searchValue.trim()) {
@@ -75,7 +73,7 @@ export function SearchDialog({ opened, onClose }: SearchDialogProps) {
       // Simulate search delay
       setTimeout(() => {
         setIsSearching(false)
-      }, 1500)
+      }, 1000)
     }
   }, [selectedType, searchValue])
 
@@ -90,11 +88,22 @@ export function SearchDialog({ opened, onClose }: SearchDialogProps) {
       }
       setSearchHistory((prev) => [newItem, ...prev.slice(0, 9)]) // Keep only 10 items
 
+      if (selectedType === "tag") {
+        addCustomTag(searchValue.trim())
+      } else if (selectedType === "content") {
+        handleContentSearch(searchValue.trim())
+      }
+
       // Simulate search delay
       setTimeout(() => {
         setIsSearching(false)
       }, 2000)
     }
+  }
+
+  const handleContentSearch = async (query: string) => {
+    // 设置搜索查询到Context，让feed自动更新
+    setSearchQuery(query)
   }
 
   const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -215,7 +224,10 @@ export function SearchDialog({ opened, onClose }: SearchDialogProps) {
             variant="transparent" 
             color="gray" 
             size="sm" 
-            onClick={handleSearch} 
+            onClick={() => {
+              handleSearch()
+              onClose()
+            }} 
             leftSection={<Search size={16} />}
             style={{ borderRadius: 0 }}
           >
@@ -224,7 +236,16 @@ export function SearchDialog({ opened, onClose }: SearchDialogProps) {
         </Group>
 
         {searchValue.trim() ? (
-          <SearchResults searchValue={searchValue} selectedType={selectedType} isLoading={isSearching} />
+          <SearchResults 
+            searchValue={searchValue} 
+            selectedType={selectedType} 
+            isLoading={isSearching}
+            feedPosts={posts}
+            onTagClick={(tag) => {
+              addCustomTag(tag)
+              onClose()
+            }}
+          />
         ) : (
           <Stack gap="sm">
             <Group justify="space-between" align="center">
@@ -257,6 +278,10 @@ export function SearchDialog({ opened, onClose }: SearchDialogProps) {
                       onClick={() => {
                         setSearchValue(item.text)
                         setSelectedType(item.type)
+
+                        if (item.type === "tag") {
+                          addCustomTag(item.text)
+                        }
                       }}
                     >
                       {item.type === "tag" ? `${item.text}` : item.text}

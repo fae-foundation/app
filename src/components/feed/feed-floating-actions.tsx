@@ -77,12 +77,13 @@ export function FeedFloatingActions({
                   style={{
                     backgroundColor: "#ff6b35",
                     boxShadow: "0 0 10px 0 rgba(255, 107, 53, 0.3)",
+                    borderRadius: "100%",
                   }}
                   onClick={() => setUploadDialogOpened(true)}
                   aria-label="发布作品"
                 >
                   <Plus 
-                    strokeWidth={1.5} 
+                    strokeWidth={2.5} 
                     size={24}
                     color="white"
                   />
@@ -103,6 +104,8 @@ export function FeedFloatingActions({
                   style={{
                     backgroundColor: "var(--mantine-color-white)",
                     boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.1)",
+                    borderRadius: "100%",
+
                   }}
                   color="gray"
                   onClick={onRefresh}
@@ -134,6 +137,7 @@ export function FeedFloatingActions({
                   style={{
                     backgroundColor: "var(--mantine-color-white)",
                     boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.1)",
+                    borderRadius: "100%",
                   }}
                   color="gray"
                   onClick={handleScrollToTop}

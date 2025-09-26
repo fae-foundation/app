@@ -1,7 +1,6 @@
 "use client";
 
 import { ReactElement, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   DropdownMenu,
@@ -26,7 +25,7 @@ export type ActionButtonProps = {
   strokeColor: string;
   fillColor: string;
   isActive?: boolean;
-  onClick?: () => Promise<any> | undefined | undefined;
+  onClick?: () => Promise<any> | void;
   renderPopover?: (trigger: ReactElement) => ReactElement;
   isDisabled?: boolean;
   isUserLoggedIn?: boolean;
@@ -79,7 +78,6 @@ export const ActionButton = ({
   fillOnClick = true,
 }: ActionButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
   const { checkAuthentication } = useAuthCheck();
   const { resolvedTheme } = useTheme();
   const isDarkMode = resolvedTheme === "dark";
@@ -104,80 +102,55 @@ export const ActionButton = ({
     }
   };
 
-  // dark: gray-200, light: gray-600
-  const baseGray = isDarkMode ? "#E5E7EB" : "#4B5563"; 
-  let iconStyleColor: string | undefined;
-  let iconStyleFill: string | undefined;
-  let iconOpacityStyle: number | undefined;
-  let buttonBgStyle: string | undefined;
-  let divCursorStyle: string | undefined;
-  let divOpacityClass: string | undefined;
+  const baseGray = isDarkMode ? "#E5E7EB" : "#4B5563";
+  const iconColor = isDisabled ? baseGray : (isActive ? strokeColor : baseGray);
+  const iconOpacity = isDisabled ? 0.5 : 1;
+  const cursorStyle = isDisabled ? "cursor-not-allowed" : "cursor-pointer";
+  const opacityClass = isDisabled ? "opacity-70" : "";
 
-  if (showLoginActions) {
-    iconStyleColor = isHovered ? strokeColor : baseGray;
-    iconStyleFill = undefined;
-    iconOpacityStyle = 1;
-    buttonBgStyle = undefined;
-    divCursorStyle = "cursor-pointer";
-    divOpacityClass = "";
-  } else {
-    iconStyleColor = isDisabled
-      ? baseGray
-      : isActive
-        ? strokeColor
-        : isHovered
-          ? strokeColor
-          : baseGray;
-    iconStyleFill = isDisabled ? undefined : isActive && fillOnClick ? fillColor : undefined;
-    iconOpacityStyle = isDisabled ? 0.5 : 1;
-    buttonBgStyle = isActive ? `${strokeColor}10` : undefined;
-    divCursorStyle = isDisabled ? "cursor-not-allowed" : "cursor-pointer";
-    divOpacityClass = isDisabled ? "opacity-70" : "";
-  }
+  // 激活时填充
+  const isBookmark = label === "Bookmark";
+  const isLike = label === "Like";
+  const iconFill = (isBookmark || isLike) && isActive ? iconColor : undefined;
 
   const iconProps = {
-    size: 18,
+    size: 16, // 调小图标尺寸
     strokeWidth: 2,
     className: "transition-all duration-200",
     style: {
-      color: iconStyleColor,
-      fill: iconStyleFill,
-      opacity: iconOpacityStyle,
+      color: iconColor,
+      fill: iconFill,
+      opacity: iconOpacity,
     },
   };
 
   const MainButton = (
-    <Button
-      variant="ghost"
-      size="sm"
+    <button
       onClick={handleClick}
       disabled={isDisabled}
       className={cn(
-        "flex items-center touch-manipulation min-h-[44px] min-w-[44px]",
+        "inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+        "flex items-center touch-manipulation min-h-[36px] min-w-[36px] px-2 h-8", // 调小按钮尺寸
+        // 背景色效果
+        "bg-transparent",
+        "hover:bg-muted/30", // hover时轻微加深
+        isActive && "bg-muted/50 hover:bg-muted/60", // 激活时更深，hover时更深
         className
       )}
-      style={{
-        color: iconStyleColor,
-        backgroundColor: buttonBgStyle,
-      }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onTouchStart={() => setIsHovered(true)}
-      onTouchEnd={() => setIsHovered(false)}
     >
       <Icon {...iconProps} />
       {!(label === "Bookmark" || label === "Share") && formattedCount && (
-        <span className="text-xs font-bold ml-1 min-w-fit">
+        <span className="text-xs font-bold ml-1 min-w-fit text-foreground">
           {formattedCount}
         </span>
       )}
-    </Button>
+    </button>
   );
 
   const divWrapperClassName = cn(
     "group flex items-center touch-manipulation",
-    divCursorStyle,
-    divOpacityClass,
+    cursorStyle,
+    opacityClass,
     className
   );
 
@@ -196,14 +169,7 @@ export const ActionButton = ({
     return (
       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>
-          <div
-            className={divWrapperClassName}
-            style={{ backgroundColor: buttonBgStyle }}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            onTouchStart={() => setIsHovered(true)}
-            onTouchEnd={() => setIsHovered(false)}
-          >
+          <div className={divWrapperClassName}>
             <TooltipWrapper>{MainButton}</TooltipWrapper>
           </div>
         </DropdownMenuTrigger>
@@ -224,14 +190,7 @@ export const ActionButton = ({
   }
 
   return (
-    <div
-      className={divWrapperClassName}
-      style={{ backgroundColor: buttonBgStyle }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onTouchStart={() => setIsHovered(true)}
-      onTouchEnd={() => setIsHovered(false)}
-    >
+    <div className={divWrapperClassName}>
       <TooltipWrapper>{MainButton}</TooltipWrapper>
     </div>
   );

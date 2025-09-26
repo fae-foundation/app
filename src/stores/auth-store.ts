@@ -18,7 +18,7 @@ type LensAuthState = {
 export const useLensAuthStore = create<LensAuthState>((set) => ({
   client: PublicClient.create({
     environment: env.NEXT_PUBLIC_ENVIRONMENT === "development" ? testnet : mainnet,
-    origin: "https://o-harbor.vercel.app",
+    origin: "http://localhost:3000",
     storage: typeof window !== "undefined" ? window.localStorage : undefined,
     apiKey: env.NEXT_PUBLIC_ENVIRONMENT === "development"
     ? env.LENS_API_KEY_TESTNET
