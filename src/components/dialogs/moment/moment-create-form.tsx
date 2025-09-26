@@ -61,7 +61,7 @@ interface Tag {
   name: string
 }
 
-interface ArtCreateFormProps {
+interface MCreateFormProps {
   onClose: () => void
   onComplete?: () => void
 }
@@ -135,7 +135,7 @@ const CATEGORY_OPTIONS = [
   { value: "multi-relationship", label: "多元", icon: <Users className="h-4 w-4 text-gray-500" /> },
 ]
 
-export function ArtCreateForm({ onClose, onComplete }: ArtCreateFormProps) {
+export function MCreateForm({ onClose, onComplete }: MCreateFormProps) {
   const [showToast, setShowToast] = useState(false)
   const [toastMessage, setToastMessage] = useState("")
   const [toastType, setToastType] = useState<"success" | "error" | "warning">("success")
@@ -191,17 +191,17 @@ export function ArtCreateForm({ onClose, onComplete }: ArtCreateFormProps) {
     }
 
     if (!selectedRating) {
-      toast.error("请选择投稿分类-分级")
+      toast.error("请选择动态分类-分级")
       return
     }
 
     if (!selectedWarnings) {
-      toast.error("请选择投稿分类-警告")
+      toast.error("请选择动态分类-警告")
       return
     }
     
     if (!selectedCategories) {
-      toast.error("请选择投稿分类-频道")
+      toast.error("请选择动态分类-频道")
       return
     }
 
@@ -279,8 +279,9 @@ export function ArtCreateForm({ onClose, onComplete }: ArtCreateFormProps) {
 
       //Build tags
       const allTags = [...tags.map(tag => tag.name)];
-      // 添加cook标签
-      allTags.push("cook");
+      
+      // 添加moment标签
+      allTags.push("moment");
       // 添加分级
       if (selectedRating) {
         allTags.push(selectedRating);
@@ -365,7 +366,7 @@ export function ArtCreateForm({ onClose, onComplete }: ArtCreateFormProps) {
 
       await post(client, {
         contentUri: uri,
-        feed: evmAddress(env.NEXT_PUBLIC_COOK_ADDRESS)//Arctica works-feed for uploading fanworks on Arctica
+        feed: evmAddress(env.NEXT_PUBLIC_MOMENT_ADDRESS)
         //actions,
       })
       .andThen(handleOperationWith(walletClient))
@@ -409,7 +410,7 @@ export function ArtCreateForm({ onClose, onComplete }: ArtCreateFormProps) {
         <CardHeader>
           <CardTitle className="flex items-center space-x-2 text-lg text-zinc-900 font-semibold">
             <FileText className="h-5 w-5" />
-            <span>投稿</span>
+            <span>动态</span>
           </CardTitle>
         </CardHeader>
 
@@ -436,7 +437,7 @@ export function ArtCreateForm({ onClose, onComplete }: ArtCreateFormProps) {
             </div>
 
             {/* Original Content Toggle */}
-            <ToggleButton
+            {/*<ToggleButton
               label="版权声明"
                   value={isOriginal}
                   onValueChange={(checked) => {
@@ -448,7 +449,7 @@ export function ArtCreateForm({ onClose, onComplete }: ArtCreateFormProps) {
                   icon={<Copyright className="h-4 w-4" />}
                   description="选择合适的许可证"
                   variant="success"
-            />
+            />*/}
             {/* License Selection Dialog - Only show when marked as original */}
             {isOriginal && (
               <Dialog open={showLicenseSheet} onOpenChange={setShowLicenseSheet}>
@@ -787,7 +788,7 @@ export function ArtCreateForm({ onClose, onComplete }: ArtCreateFormProps) {
                       <Settings className="h-5 w-5 text-zinc-700 group-hover:rotate-180 transition-transform " />
                     </div>
                     <div className="flex gap-1 text-sm font-medium text-zinc-700">
-                      投稿分类<div className="text-destructive">*</div>
+                      动态分类<div className="text-destructive">*</div>
                     </div>
                   </div>
                 </Button>
@@ -797,7 +798,7 @@ export function ArtCreateForm({ onClose, onComplete }: ArtCreateFormProps) {
                 <DialogHeader className="border-b border-gray-100 pb-4">
                   <div className="flex items-center justify-center gap-2">
                     <Settings className="h-4 w-4 text-zinc-900" />
-                    <DialogTitle className="text-l font-semibold text-gray-800 text-center">投稿分类</DialogTitle>
+                    <DialogTitle className="text-l font-semibold text-gray-800 text-center">动态分类</DialogTitle>
                   </div>
                 </DialogHeader>
 
