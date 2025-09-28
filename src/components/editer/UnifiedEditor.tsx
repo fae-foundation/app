@@ -84,7 +84,7 @@ export function UnifiedEditor({
   }
 
   const saveSelectedTags = () => {
-    const newTags = [...tags]
+    const newTags = [...(tags || [])]
     selectedTags.forEach((tag) => {
       if (!newTags.find((t) => t.name === tag.name)) {
         newTags.push(tag)
@@ -97,7 +97,7 @@ export function UnifiedEditor({
   }
 
   const removeTag = (tagName: string) => {
-    onTagsChange(tags.filter((t) => t.name !== tagName))
+    onTagsChange((tags || []).filter((t) => t.name !== tagName))
   }
 
   const formatText = (format: string) => {
@@ -122,10 +122,10 @@ export function UnifiedEditor({
           onChange={handleTitleChange}
           className="flex-1 resize-none border-none outline-none bg-transparent placeholder-gray-400 text-base"
           rows={1}
-          maxLength={30}
+          maxLength={60}
         />
         <div className="flex gap-1 text-xs text-muted-foreground">
-          {title.length}/30 
+          {title.length}/60 
           <div className="text-destructive">*</div>
         </div>
       </div>
@@ -139,19 +139,19 @@ export function UnifiedEditor({
           onChange={handleContentChange}
           className="w-full text-gray-700 resize-none border-none outline-none bg-transparent placeholder-gray-400 text-sm dark:text-gray-300"
           rows={5}
-          maxLength={5000}
+          maxLength={10000}
         />
         <div className="flex gap-1 justify-end text-xs text-muted-foreground">
-          {content.length}/5000 
+          {content.length}/10000 
           <div className="text-destructive">*</div>
         </div>
       </div>
 
       {/* Tags Section */}
-      {tags.length > 0 && (
+      {(tags || []).length > 0 && (
         <div className="px-4 py-2 border-t border-none">
           <TagDisplay 
-            tags={tags} 
+            tags={tags || []} 
             onRemove={removeTag}
             showRemoveButton={true}
           />

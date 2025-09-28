@@ -222,6 +222,20 @@ export function useFeed(options: useFeedOptions = {}) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [loadPostsFromLens]);
 
+  // 全局刷新事件监听
+  useEffect(() => {
+    const handleGlobalRefresh = () => {
+      loadPostsFromLens(true);
+    };
+
+    // 监听全局刷新事件
+    window.addEventListener('feed-refresh', handleGlobalRefresh);
+    
+    return () => {
+      window.removeEventListener('feed-refresh', handleGlobalRefresh);
+    };
+  }, [loadPostsFromLens]);
+
   // Initialize feed
   useEffect(() => {
     

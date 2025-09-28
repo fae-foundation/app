@@ -32,6 +32,9 @@ export function ImageUpload({ images, onImagesChange, maxImages = 12 }: ImageUpl
   })
   const fileInputRef = useRef<HTMLInputElement>(null)
 
+  // 确保 images 始终是一个数组
+  const safeImages = images || []
+
   const handleFileSelect = (files: FileList) => {
     const newImages: UploadedImage[] = []
     Array.from(files).forEach((file) => {
@@ -55,17 +58,17 @@ export function ImageUpload({ images, onImagesChange, maxImages = 12 }: ImageUpl
       })
     })
 
-    const totalImages = images.length + newImages.length
+    const totalImages = safeImages.length + newImages.length
     if (totalImages > maxImages) {
       alert(`最多只能上传 ${maxImages} 张图片`)
       return
     }
 
-    onImagesChange([...images, ...newImages])
+    onImagesChange([...safeImages, ...newImages])
   }
 
   const removeImage = (id: string) => {
-    const updatedImages = images.filter((img) => img.id !== id)
+    const updatedImages = safeImages.filter((img) => img.id !== id)
     onImagesChange(updatedImages)
   }
 
@@ -78,7 +81,7 @@ export function ImageUpload({ images, onImagesChange, maxImages = 12 }: ImageUpl
     e.preventDefault()
     if (draggedIndex === null) return
     if (draggedIndex !== index) {
-      const newImages = [...images]
+      const newImages = [...safeImages]
       const draggedImage = newImages[draggedIndex]
       newImages.splice(draggedIndex, 1)
       newImages.splice(index, 0, draggedImage)
@@ -109,7 +112,7 @@ export function ImageUpload({ images, onImagesChange, maxImages = 12 }: ImageUpl
     if (targetElement) {
       const targetIndex = Number.parseInt(targetElement.dataset.imageIndex || "-1")
       if (targetIndex >= 0 && targetIndex !== touchStartIndex) {
-        const newImages = [...images]
+        const newImages = [...safeImages]
         const draggedImage = newImages[touchStartIndex]
         newImages.splice(touchStartIndex, 1)
         newImages.splice(targetIndex, 0, draggedImage)
@@ -126,16 +129,16 @@ export function ImageUpload({ images, onImagesChange, maxImages = 12 }: ImageUpl
   return (
     <div className="space-y-4">
 
-      {images.length > 0 && (
+      {safeImages.length > 0 && (
         <div className="space-y-3">
           <div className="flex items-center gap-1 text-sm text-muted-foreground">
             <ImageIcon className="h-4 w-4" />
-            已上传 {images.length} 张图片
+            已上传 {safeImages.length} 张图片
             <span className="hidden sm:inline">(拖拽调整顺序)</span>
             <span className="sm:hidden">(长按拖动调整顺序)</span>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-            {images.map((image, index) => (
+            {safeImages.map((image, index) => (
               <div
                 key={image.id}
                 data-image-index={index}

@@ -10,6 +10,15 @@ interface ArtDialogProps {
 }
 
 export function ArtDialog({ opened, onClose, onComplete }: ArtDialogProps) {
+  const handleComplete = () => {
+    // 触发全局 feed 刷新事件
+    window.dispatchEvent(new CustomEvent('feed-refresh'))
+    // 调用原始的 onComplete 回调
+    if (onComplete) {
+      onComplete()
+    }
+  }
+
   return (
     <Modal
       opened={opened}
@@ -34,7 +43,7 @@ export function ArtDialog({ opened, onClose, onComplete }: ArtDialogProps) {
     >
       <ArtCreateForm 
       onClose={onClose} 
-      onComplete={onComplete}
+      onComplete={handleComplete}
       />
     </Modal>
   )

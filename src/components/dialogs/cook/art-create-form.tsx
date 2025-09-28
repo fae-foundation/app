@@ -958,7 +958,7 @@ export function ArtCreateForm({ onClose, onComplete }: ArtCreateFormProps) {
               <Button disabled={isSubmitting} className="chip-button" >
                 {isSubmitting ? (
                   <>
-                    <Loader2 className="chip-button h-4 w-4 mr-2 animate-spin" />
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                     Publishing...
                   </>
                 ) : (

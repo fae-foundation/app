@@ -10,6 +10,15 @@ interface MDialogProps {
 }
 
 export function MDialog({ opened, onClose, onComplete }: MDialogProps) {
+  const handleComplete = () => {
+    // 触发全局 feed 刷新事件
+    window.dispatchEvent(new CustomEvent('feed-refresh'))
+    // 调用原始的 onComplete 回调
+    if (onComplete) {
+      onComplete()
+    }
+  }
+
   return (
     <Modal
       opened={opened}
@@ -34,7 +43,7 @@ export function MDialog({ opened, onClose, onComplete }: MDialogProps) {
     >
       <MCreateForm 
       onClose={onClose} 
-      onComplete={onComplete}
+      onComplete={handleComplete}
       />
     </Modal>
   )

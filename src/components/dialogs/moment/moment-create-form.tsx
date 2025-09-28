@@ -278,7 +278,7 @@ export function MCreateForm({ onClose, onComplete }: MCreateFormProps) {
       }
 
       //Build tags
-      const allTags = [...tags.map(tag => tag.name)];
+      const allTags = [...(tags || []).map(tag => tag.name)];
       
       // 添加moment标签
       allTags.push("moment");
@@ -291,7 +291,7 @@ export function MCreateForm({ onClose, onComplete }: MCreateFormProps) {
         allTags.push(selectedCategories);
       }
       // 添加警告
-      selectedWarnings.forEach(warning => {
+      (selectedWarnings || []).forEach(warning => {
         if (warning) {
           allTags.push(warning);
         }
@@ -959,7 +959,7 @@ export function MCreateForm({ onClose, onComplete }: MCreateFormProps) {
               <Button disabled={isSubmitting} className="chip-button" >
                 {isSubmitting ? (
                   <>
-                    <Loader2 className="chip-button h-4 w-4 mr-2 animate-spin" />
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                     Publishing...
                   </>
                 ) : (
