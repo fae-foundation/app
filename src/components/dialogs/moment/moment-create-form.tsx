@@ -239,18 +239,21 @@ export function MCreateForm({ onClose, onComplete }: MCreateFormProps) {
       }
 
       // Upload image to Grove storage
-      let uploadedImages = [];
-      if (images && images.length > 0) {
+      let uploadedImages: UploadedImage[] = [];
+      if (images && Array.isArray(images) && images.length > 0) {
         try {
           for (let i = 0; i < images.length; i++) {
             const image = images[i];
-            const url = await uploadFile(image.file);
-            uploadedImages.push({
-              ...image,
-              url,
-            });
+            if (image && image.file) {
+              const url = await uploadFile(image.file);
+              uploadedImages.push({
+                ...image,
+                url,
+              });
+            }
           }
         } catch (uploadError) {
+          console.error("Image upload error:", uploadError);
           toast.error("Failed to upload images. Please try again.")
           return;
         }
@@ -277,7 +280,7 @@ export function MCreateForm({ onClose, onComplete }: MCreateFormProps) {
       });
 
       //Create Metadata
-      if (!images || images.length === 0) {
+      if (!images || images.length === 0 || !uploadedImages || uploadedImages.length === 0) {
         metadata = article({
           title,
           content,          
@@ -289,7 +292,7 @@ export function MCreateForm({ onClose, onComplete }: MCreateFormProps) {
         metadata = article({
           title,
           content,
-          attachments: uploadedImages.map(i => ({
+          attachments: (uploadedImages || []).map(i => ({
             item: i.url!,
             type: i.type as MediaImageMimeType,
           })),
