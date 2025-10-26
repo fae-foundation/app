@@ -63,13 +63,13 @@ export const PostActionsProvider = ({ children }: { children: ReactNode }) => {
 
   const convertToBooleanOperations = useCallback((operations: LoggedInPostOperations): BooleanPostOperations => {
     // Debug logging for canComment validation
-    console.log("convertToBooleanOperations Debug:", {
+    /*console.log("convertToBooleanOperations Debug:", {
       canComment: operations.canComment,
       canCommentType: operations.canComment.__typename,
       canCommentPassed: operations.canComment.__typename === "PostOperationValidationPassed",
       fullOperations: operations
     });
-    
+    */
     return {
       hasUpvoted: operations.hasUpvoted,
       hasBookmarked: operations.hasBookmarked,

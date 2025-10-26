@@ -104,7 +104,7 @@ export function UploadDialog({ opened, onClose, onButtonClick, selectedAction }:
             >
               Upload
             </Text>
-            <Text
+            {/*<Text
               size="md"
               c="gray.4"
               style={{
@@ -113,7 +113,7 @@ export function UploadDialog({ opened, onClose, onButtonClick, selectedAction }:
               }}
             >
               What are we sharing today?
-            </Text>
+            </Text>*/}
           </Stack>
         </Box>
 
