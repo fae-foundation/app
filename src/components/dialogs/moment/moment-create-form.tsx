@@ -260,7 +260,7 @@ export function MCreateForm({ onClose, onComplete }: MCreateFormProps) {
       }
 
       //Build tags
-      const allTags = [...(tags || []).map(tag => tag.name)];
+      const allTags = [...(tags || []).filter(tag => tag && tag.name).map(tag => tag.name)];
       
       // 添加moment标签
       allTags.push("moment");
@@ -274,13 +274,13 @@ export function MCreateForm({ onClose, onComplete }: MCreateFormProps) {
       }
       // 添加警告
       (selectedWarnings || []).forEach(warning => {
-        if (warning) {
+        if (warning && typeof warning === 'string') {
           allTags.push(warning);
         }
       });
 
       //Create Metadata
-      if (!images || images.length === 0 || !uploadedImages || uploadedImages.length === 0) {
+      if (!uploadedImages || uploadedImages.length === 0) {
         metadata = article({
           title,
           content,          
@@ -292,7 +292,7 @@ export function MCreateForm({ onClose, onComplete }: MCreateFormProps) {
         metadata = article({
           title,
           content,
-          attachments: (uploadedImages || []).map(i => ({
+          attachments: uploadedImages.map(i => ({
             item: i.url!,
             type: i.type as MediaImageMimeType,
           })),
